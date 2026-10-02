@@ -78,31 +78,41 @@
 - [ ] 9.4 Add stop decision check: if temporal models do not improve PR-AUC by >= 0.02 over static GCN on ANY dataset, print "⚠ Temporal modeling adds minimal value for these datasets"
 - [ ] 9.5 Save comparison results to `outputs/temporal_comparison.json`; verify file exists and is valid JSON
 
-## 10. Unit tests
+## 10. Interactive exercises (exercises/)
 
-- [ ] 10.1 Create `phases/phase06_temporal_graphs/tests/test_tgn.py` with tests for TGN model — verify relation encoder output shape, memory update correctness, forward pass produces correct embeddings; verify with pytest
-- [ ] 10.2 Create `phases/phase06_temporal_graphs/tests/test_grn.py` with tests for GRN model — verify GCN encoder output shape, RNN state passing, predict produces correct output; verify with pytest
-- [ ] 10.3 Create `phases/phase06_temporal_graphs/tests/test_rolling_gcn.py` with tests for rolling-window GCN — verify snapshot building, window splitting, training per window, predictions; verify with pytest
-- [ ] 10.4 Create `phases/phase06_temporal_graphs/tests/test_leakage_checker.py` with tests for leakage detection — verify leakage detection on known leaking/non-leaking splits, temporal split correctness; verify with pytest
-- [ ] 10.5 Create `phases/phase06_temporal_graphs/tests/test_dataset_loaders.py` with tests for temporal loaders — verify Pay-At-Pump temporal split, Sungkyunkwan snapshot loading, Naver Plus Bank loading; verify with pytest
-- [ ] 10.6 Create `phases/phase06_temporal_graphs/tests/test_integration.py` with end-to-end test: generate small temporal graph, train all models, verify all models train and return metrics dict; verify with pytest
+- [ ] 10.1 Create `phases/phase06_temporal_graphs/exercises/` directory
+- [ ] 10.2 Create `01-introduction-to-temporal-graphs.ipynb` with task to build and visualize temporal snapshots
+- [ ] 10.3 Create `02-temporal-graph-networks.ipynb` with task to configure and run TGN memory updates
+- [ ] 10.4 Create `03-rolling-window-training.ipynb` with task to split data into windows and train per-window models
+- [ ] 10.5 Create `04-temporal-leakage.ipynb` with task to detect and prevent temporal leakage
+- [ ] 10.6 Create `05-grn-and-attention.ipynb` with task to run GRN on snapshot sequences
+- [ ] 10.7 Create `06-temporal-evaluation.ipynb` with task to compare temporal vs static model metrics
 
-## 11. Educational content — lessons
+## 11. Unit tests
 
-- [ ] 11.1 Create `phases/phase06_temporal_graphs/lessons/01-introduction-to-temporal-graphs.md` with 5-part structure (Explain, Code, Visualize, Practice, Solution) covering why temporal modeling matters, static vs. temporal graphs, and time-stamped edges; verify all 5 sections present
-- [ ] 11.2 Create `phases/phase06_temporal_graphs/lessons/02-temporal-graph-networks.md` with 5-part structure covering TGN architecture: node memory, relation encoder, attention-based memory update; verify all 5 sections present
-- [ ] 11.3 Create `phases/phase06_temporal_graphs/lessons/03-rolling-window-training.md` with 5-part structure covering rolling-window GCN: window splitting, per-snapshot training, aggregation strategies; verify all 5 sections present
-- [ ] 11.4 Create `phases/phase06_temporal_graphs/lessons/04-temporal-leakage.md` with 5-part structure covering temporal leakage: definition, detection, prevention, and time-based train/test splits; verify all 5 sections present
-- [ ] 11.5 Create `phases/phase06_temporal_graphs/lessons/05-grn-and-attention.md` with 5-part structure covering GRN architecture: GCN encoder + RNN, and temporal attention mechanisms; verify all 5 sections present
-- [ ] 11.6 Create `phases/phase06_temporal_graphs/lessons/06-temporal-evaluation.md` with 5-part structure covering evaluating temporal models: PR-AUC over time, Brier score, latency comparison; verify all 5 sections present
+- [ ] 11.1 Create `phases/phase06_temporal_graphs/tests/test_tgn.py` with tests for TGN model — verify relation encoder output shape, memory update correctness, forward pass produces correct embeddings; verify with pytest
+- [ ] 11.2 Create `phases/phase06_temporal_graphs/tests/test_grn.py` with tests for GRN model — verify GCN encoder output shape, RNN state passing, predict produces correct output; verify with pytest
+- [ ] 11.3 Create `phases/phase06_temporal_graphs/tests/test_rolling_gcn.py` with tests for rolling-window GCN — verify snapshot building, window splitting, training per window, predictions; verify with pytest
+- [ ] 11.4 Create `phases/phase06_temporal_graphs/tests/test_leakage_checker.py` with tests for leakage detection — verify leakage detection on known leaking/non-leaking splits, temporal split correctness; verify with pytest
+- [ ] 11.5 Create `phases/phase06_temporal_graphs/tests/test_dataset_loaders.py` with tests for temporal loaders — verify Pay-At-Pump temporal split, Sungkyunkwan snapshot loading, Naver Plus Bank loading; verify with pytest
+- [ ] 11.6 Create `phases/phase06_temporal_graphs/tests/test_integration.py` with end-to-end test: generate small temporal graph, train all models, verify all models train and return metrics dict; verify with pytest
 
-## 12. Educational content — notebooks
+## 12. Educational content — lessons
 
-- [ ] 12.1 Create `phases/phase06_temporal_graphs/notebooks/01-temporal-dynamics.ipynb` with cells that visualize temporal graph dynamics: plot event timelines, build temporal snapshots, observe graph structure evolution; verify notebook runs without errors
-- [ ] 12.2 Create `phases/phase06_temporal_graphs/notebooks/02-rolling-training.ipynb` with cells that train rolling-window GCN step-by-step: split data into windows, train per-window models, compare predictions across windows; verify notebook runs without errors
-- [ ] 12.3 Create `phases/phase06_temporal_graphs/notebooks/03-leakage-analysis.ipynb` with cells that demonstrate temporal leakage: create a leaking split, measure inflated metrics, apply proper temporal split, and compare; verify notebook runs without errors
+- [ ] 12.1 Create `phases/phase06_temporal_graphs/lessons/01-introduction-to-temporal-graphs.md` with 5-part structure (Explain, Code, Visualize, Practice, Solution) covering why temporal modeling matters, static vs. temporal graphs, and time-stamped edges; verify all 5 sections present; link Practice section to `exercises/01-introduction-to-temporal-graphs.ipynb`
+- [ ] 12.2 Create `phases/phase06_temporal_graphs/lessons/02-temporal-graph-networks.md` with 5-part structure covering TGN architecture: node memory, relation encoder, attention-based memory update; verify all 5 sections present; link Practice section to `exercises/02-temporal-graph-networks.ipynb`
+- [ ] 12.3 Create `phases/phase06_temporal_graphs/lessons/03-rolling-window-training.md` with 5-part structure covering rolling-window GCN: window splitting, per-snapshot training, aggregation strategies; verify all 5 sections present; link Practice section to `exercises/03-rolling-window-training.ipynb`
+- [ ] 12.4 Create `phases/phase06_temporal_graphs/lessons/04-temporal-leakage.md` with 5-part structure covering temporal leakage: definition, detection, prevention, and time-based train/test splits; verify all 5 sections present; link Practice section to `exercises/04-temporal-leakage.ipynb`
+- [ ] 12.5 Create `phases/phase06_temporal_graphs/lessons/05-grn-and-attention.md` with 5-part structure covering GRN architecture: GCN encoder + RNN, and temporal attention mechanisms; verify all 5 sections present; link Practice section to `exercises/05-grn-and-attention.ipynb`
+- [ ] 12.6 Create `phases/phase06_temporal_graphs/lessons/06-temporal-evaluation.md` with 5-part structure covering evaluating temporal models: PR-AUC over time, Brier score, latency comparison; verify all 5 sections present; link Practice section to `exercises/06-temporal-evaluation.ipynb`
 
-## 13. Integration and verification
+## 13. Educational content — notebooks
 
-- [ ] 13.1 Run full test suite `pytest phases/phase06_temporal_graphs/tests/ -v` and verify all tests pass including new temporal tests
-- [ ] 13.2 Run `phases/phase06_temporal_graphs/run_temporal.py` end-to-end with synthetic temporal data and verify: all three datasets processed, all models train, metrics reported, XAI validated, comparison table printed, stop decision check passes; confirm exit code 0
+- [ ] 13.1 Create `phases/phase06_temporal_graphs/notebooks/01-temporal-dynamics.ipynb` with cells that visualize temporal graph dynamics: plot event timelines, build temporal snapshots, observe graph structure evolution; verify notebook runs without errors
+- [ ] 13.2 Create `phases/phase06_temporal_graphs/notebooks/02-rolling-training.ipynb` with cells that train rolling-window GCN step-by-step: split data into windows, train per-window models, compare predictions across windows; verify notebook runs without errors
+- [ ] 13.3 Create `phases/phase06_temporal_graphs/notebooks/03-leakage-analysis.ipynb` with cells that demonstrate temporal leakage: create a leaking split, measure inflated metrics, apply proper temporal split, and compare; verify notebook runs without errors
+
+## 14. Integration and verification
+
+- [ ] 14.1 Run full test suite `pytest phases/phase06_temporal_graphs/tests/ -v` and verify all tests pass including new temporal tests
+- [ ] 14.2 Run `phases/phase06_temporal_graphs/run_temporal.py` end-to-end with synthetic temporal data and verify: all three datasets processed, all models train, metrics reported, XAI validated, comparison table printed, stop decision check passes; confirm exit code 0

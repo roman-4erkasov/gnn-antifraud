@@ -92,6 +92,14 @@ Phase 01 is a self-contained phase under `phases/phase01_lightgbm_baseline/`. No
 - Centralized `src/data/` with all loaders — violates phase isolation principle.
 - Download data on every run — slow, requires network, not reproducible.
 
+### Decision 10: Interactive exercises with linked notebooks
+**Choice:** Each lesson's Practice section links to an interactive Jupyter notebook in `exercises/` directory.
+**Rationale:** Practice exercises in markdown are static text. Linking to notebooks allows users to open, run, and modify code directly. Minimal template: setup code, task description, empty code cell for user solution, solution in markdown code block.
+**Alternatives considered:**
+- All exercises in one notebook — harder to navigate, no clear mapping to lessons
+- Exercises embedded in lesson notebooks — mixes demonstration and practice
+- Practice only in markdown — requires copy-paste, less interactive
+
 ## Risks / Trade-offs
 
 | Risk | Mitigation |
@@ -113,7 +121,7 @@ This is a greenfield self-contained phase. No migration needed.
 5. Create phase structure: `phases/phase01_lightgbm_baseline/lessons/` and `phases/phase01_lightgbm_baseline/notebooks/`.
 6. Write lessons (markdown) and notebooks (IPYNB) that reference the implementation code.
 7. Add tests under `phases/phase01_lightgbm_baseline/tests/`.
-8. Create a top-level run script `run_lightgbm_baseline.py` that orchestrates the full pipeline.
+8. Create a phase-level run script `phases/phase01_lightgbm_baseline/run_lightgbm_baseline.py` that orchestrates the full pipeline (consistent with the in-phase runner convention used by phases 02, 03, 04a–10).
 
 ## Open Questions
 

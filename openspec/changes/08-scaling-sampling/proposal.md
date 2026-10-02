@@ -1,6 +1,6 @@
 ## Why
 
-Phases 1–7 have established model effectiveness on datasets of varying sizes. However, the research has not addressed scalability — how models perform as graph size grows from thousands to millions to hundreds of millions of nodes. The project's end goal is a production system for a 300M-node graph. Without sampling optimization, GNN training on such a graph is computationally infeasible. We need to empirically compare sampling strategies (Neighbor Sampling, GraphSAINT, GraphBolt), understand the speed/quality tradeoffs, and design a partitioning strategy for large-scale distributed training.
+Phases 1–8 have established model effectiveness on datasets of varying sizes. However, the research has not addressed scalability — how models perform as graph size grows from thousands to millions to hundreds of millions of nodes. The project's end goal is a production system for a 300M-node graph. Without sampling optimization, GNN training on such a graph is computationally infeasible. We need to empirically compare sampling strategies (Neighbor Sampling, GraphSAINT, GraphBolt), understand the speed/quality tradeoffs, and design a partitioning strategy for large-scale distributed training.
 
 ## What Changes
 
@@ -24,7 +24,7 @@ None — Phase 08 uses a wrapper/adapter pattern to add sampling to existing mod
 ## Impact
 
 - New self-contained phase under `phases/phase08_scaling_sampling/`:
-  - `src/phase08_scaling_sampling/data_loader.py`: Synthetic scaling dataset generation and loading
+  - `src/phase08_scaling_sampling/data_loader.py`: Synthetic scaling dataset generation and loading into `data/synthetic-scaling/` subdirectory
   - `src/phase08_scaling_sampling/neighbor.py`: Neighbor Sampling implementation with configurable depth and fanout
   - `src/phase08_scaling_sampling/graphsaint.py`: GraphSAINT (vertex, edge, subgraph) sampling implementations
   - `src/phase08_scaling_sampling/graphbolt.py`: GraphBolt integration (if available) or reference implementation
@@ -43,5 +43,6 @@ None — Phase 08 uses a wrapper/adapter pattern to add sampling to existing mod
     - `01-scaling-experiments.ipynb`
     - `02-sampling-strategies.ipynb`
     - `03-performance-benchmarks.ipynb`
+  - `exercises/`: interactive Jupyter notebooks for Practice sections (linked from lessons)
 - Extends existing: Uses models from `phases/phase02_minimal_gnn/src/phase02_minimal_gnn/minimal_gcn.py` and `phases/phase06_temporal_graphs/src/phase06_temporal_graphs/` via wrapper/adapter pattern (no direct modification)
 - No breaking changes to existing codebase

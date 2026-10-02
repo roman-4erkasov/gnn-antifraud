@@ -1,6 +1,6 @@
 ## Why
 
-Phases 1–5 demonstrated fraud detection on static graph representations. However, real-world fraud is inherently temporal — transaction sequences, timing patterns, and evolving network structures carry critical signals that static graphs cannot capture. The IEEE-CIS dataset, for example, has explicit timestamps. Pay-At-Pump and Sungkyunkwan datasets were designed specifically for temporal anomaly detection. Without temporal modeling, we risk missing time-dependent fraud patterns (e.g., accounts that appear normal for weeks then suddenly engage in coordinated fraud). This phase addresses that gap by introducing temporal graph models and comparing them against static baselines.
+Phases 1–6 demonstrated fraud detection on static graph representations. However, real-world fraud is inherently temporal — transaction sequences, timing patterns, and evolving network structures carry critical signals that static graphs cannot capture. The IEEE-CIS dataset, for example, has explicit timestamps. Pay-At-Pump and Sungkyunkwan datasets were designed specifically for temporal anomaly detection. Without temporal modeling, we risk missing time-dependent fraud patterns (e.g., accounts that appear normal for weeks then suddenly engage in coordinated fraud). This phase addresses that gap by introducing temporal graph models and comparing them against static baselines.
 
 ## What Changes
 
@@ -22,7 +22,7 @@ Phases 1–5 demonstrated fraud detection on static graph representations. Howev
 
 - `phase02_minimal_gnn`: Adds temporal evaluation — static GCN now evaluated on temporal snapshots as an additional comparison point
 - `phase01_lightgbm_baseline`: Adds temporal-aware baseline (features computed within rolling windows)
-- `phase04_xai_fraud`: Adds temporal dimension to explanation validation (XAI on time-stamped predictions)
+- `phase05b_xai_validation`: Adds temporal dimension to explanation validation (XAI on time-stamped predictions)
 
 ## Impact
 
@@ -41,6 +41,7 @@ Phases 1–5 demonstrated fraud detection on static graph representations. Howev
     - `01-temporal-dynamics.ipynb`
     - `02-rolling-training.ipynb`
     - `03-leakage-analysis.ipynb`
+   - `exercises/`: interactive Jupyter notebooks for Practice sections (linked from lessons)
 - Data stored in `data/pay-at-pump/`, `data/sungkyunkwan/`, `data/naver-plus-bank/` (shared across phases); `data_loader.py` checks existence and downloads if missing
 - Uses existing: `src/utils/calibration.py`, `src/utils/metrics.py`, `phases/phase02_minimal_gnn/`
 - No breaking changes to existing codebase

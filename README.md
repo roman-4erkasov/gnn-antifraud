@@ -10,8 +10,9 @@ gnn-antifraud/
 │   ├── phase01_lightgbm_baseline/   # LightGBM baseline
 │   ├── phase02_minimal_gnn/         # Minimal GCN
 │   ├── phase03_structural_encoding/ # Structural features
-│   ├── phase04_xai_fraud/           # XAI for fraud
+│   ├── phase04a_xai_basics/         # XAI for fraud (methods)
 │   ├── phase05_pattern_detection/   # Pattern detection
+│   ├── phase05b_xai_validation/     # XAI validation on patterns
 │   ├── phase06_temporal_graphs/     # Temporal GNNs
 │   ├── phase07_cross_dataset/       # Cross-dataset evaluation
 │   ├── phase08_scaling_sampling/    # Scaling & sampling
@@ -41,18 +42,23 @@ gnn-antifraud/
 **Описание:** Лапласианские собственные вектора, random walk features, Louvain communities.  
 **Результат:** Structural features, 5 уроков, 2 ноутбука.
 
-### Phase 04: XAI for Fraud
+### Phase 04a: XAI Basics
 **Зависимости:** Phase 01, Phase 02, Phase 03  
-**Описание:** GNNExplainer, PGExplainer, GAT attention для объяснения предсказаний.  
+**Описание:** GNNExplainer, PGExplainer, GAT attention для объяснения предсказаний; валидация по chargeback.  
 **Результат:** XAI методы, 6 уроков, 3 ноутбука.
 
 ### Phase 05: Pattern Detection
-**Зависимости:** Phase 01, Phase 02, Phase 03, Phase 04  
-**Описание:** Синтетические паттерны (Mitme, Cascade, Money Mule), валидация XAI.  
+**Зависимости:** Phase 01, Phase 02, Phase 03  
+**Описание:** Синтетические паттерны (Mitme, Cascade, Money Mule), graph-классификаторы, pattern templates.  
 **Результат:** Pattern templates, 5 уроков, 2 ноутбука.
 
+### Phase 05b: XAI Validation
+**Зависимости:** Phase 04a, Phase 05  
+**Описание:** Валидация XAI-объяснений на синтетических паттернах и найденных классификатором инстансах (precision/recall).  
+**Результат:** XAI validation pipeline, 5 уроков, 2 ноутбука.
+
 ### Phase 06: Temporal Graphs
-**Зависимости:** Phase 01, Phase 02, Phase 04  
+**Зависимости:** Phase 01, Phase 02, Phase 04a  
 **Описание:** TGN, GRN, rolling GCN для временных графов.  
 **Результат:** Temporal GNNs, 6 уроков, 3 ноутбука.
 
@@ -86,17 +92,18 @@ Phase 02 (Minimal GNN)
     ↓
 Phase 03 (Structural Encoding)
     ↓
-Phase 04 (XAI) ──────────┐
-    ↓                    ↓
-Phase 05 (Patterns)    Phase 06 (Temporal)
-    ↓                    ↓
-    └────────────────────┴──→ Phase 07 (Cross-Dataset)
-                              ↓
-                         Phase 08 (Scaling)
-                              ↓
-                         Phase 09 (Distributed Inference)
-                              ↓
-                         Phase 10 (Framework Comparison)
+Phase 04a (XAI Basics) ───────┐
+    ↓                         ↓
+Phase 05 (Patterns)       Phase 06 (Temporal)
+    ↓                         ↓
+Phase 05b (XAI Validation)    ↓
+    └─────────────────────────┴──→ Phase 07 (Cross-Dataset)
+                                    ↓
+                               Phase 08 (Scaling)
+                                    ↓
+                               Phase 09 (Distributed Inference)
+                                    ↓
+                               Phase 10 (Framework Comparison)
 ```
 
 ## Начало работы

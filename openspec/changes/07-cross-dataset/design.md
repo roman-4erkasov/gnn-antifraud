@@ -1,6 +1,6 @@
 ## Context
 
-Phases 1–7 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`, `xai-fraud`, `pattern-detection`, `06-temporal-graphs`) have established baselines, GNN models, temporal models, XAI, and pattern detection on individual datasets. Each dataset has been treated in isolation. We have no statistical rigor (no confidence intervals, no significance testing) and no cross-dataset comparison framework. The research cannot answer whether findings generalize across IEEE-CIS, Pay-At-Pump, Sungkyunkwan, and Naver Plus Bank, or whether models trained on one dataset transfer to another.
+Phases 1–7 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`, `xai-basics`, `pattern-detection`, `xai-validation`, `temporal-graphs`) have established baselines, GNN models, temporal models, XAI, and pattern detection on individual datasets. Each dataset has been treated in isolation. We have no statistical rigor (no confidence intervals, no significance testing) and no cross-dataset comparison framework. The research cannot answer whether findings generalize across IEEE-CIS, Pay-At-Pump, Sungkyunkwan, and Naver Plus Bank, or whether models trained on one dataset transfer to another.
 
 ## Goals / Non-Goals
 
@@ -93,6 +93,17 @@ Phases 1–7 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`, `xai-fr
 - Rely on each dataset's own phase loader — duplicates logic, no single entry point for cross-dataset loading.
 - Require manual data download — breaks reproducibility and adds friction for new users.
 - Store data in phase-local directory — wastes disk space when multiple phases use the same datasets.
+
+### Decision 8: Interactive exercises with linked notebooks
+
+**Choice:** Each lesson's Practice section links to an interactive Jupyter notebook in `exercises/` directory.
+
+**Rationale:** Practice exercises in markdown are static text. Linking to notebooks allows users to open, run, and modify code directly. Minimal template: setup code, task description, empty code cell for user solution, solution in markdown code block.
+
+**Alternatives considered:**
+- All exercises in one notebook — harder to navigate, no clear mapping to lessons
+- Exercises embedded in lesson notebooks — mixes demonstration and practice
+- Practice only in markdown — requires copy-paste, less interactive
 
 ## Educational Content
 

@@ -1,15 +1,13 @@
 ## Context
 
-Phases 1–4 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`, `xai-fraud`) have established: (a) LightGBM baselines with and without graph features, (b) GCN models with various structural encodings, (c) XAI methods (GNNExplainer, PGExplainer, GAT attention) with validation pipelines. All existing code in `phases/phase05_pattern_detection/src/phase05_pattern_detection/` is empty. Synthetic data doesn't exist yet for Mitme, Cascade, or Money Mule patterns. The project has `src/utils/calibration.py` and `src/utils/metrics.py` available. The existing data loaders (`ieee_cis_loader.py`, `eev_mitme_loader.py`, `pay_at_pump_loader.py`) provide graph construction patterns that can be adapted for synthetic data generation.
+Phases 1–3 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`) have established: (a) LightGBM baselines with and without graph features, (b) GCN/GAT models with various structural encodings. Phase 04a (`xai-basics`) provides XAI methods (GNNExplainer, PGExplainer, GAT attention), which are consumed by Phase 05b for explanation validation. All existing code in `phases/phase05_pattern_detection/src/phase05_pattern_detection/` is empty. Synthetic data doesn't exist yet for Mitme, Cascade, or Money Mule patterns. The project has `src/utils/calibration.py` and `src/utils/metrics.py` available. The existing data loaders (`ieee_cis_loader.py`, `eev_mitme_loader.py`, `pay_at_pump_loader.py`) provide graph construction patterns that can be adapted for synthetic data generation.
 
 ## Goals / Non-Goals
 
 **Goals:**
 - Implement synthetic data generators for Mitme, Cascade, and Money Mule fraud patterns with configurable parameters (graph size, pattern density, noise level).
 - Train GCN and GAT classifiers on each synthetic pattern type and evaluate detection quality.
-- Integrate XAI (GNNExplainer, PGExplainer) on detected pattern instances to validate explanation quality against ground truth.
 - Produce structured investigation templates for each detected pattern type.
-- Compare explanation quality across pattern types.
 
 **Non-Goals:**
 - Production-grade fraud detection system — this is a research prototype.
@@ -47,7 +45,7 @@ Phases 1–4 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`, `xai-fr
 
 **Alternatives considered:**
 - Pure node-level classification — doesn't address whether the model can detect patterns.
-- Edge-level classification — PGExplainer already covers this; pattern detection is structural.
+- Edge-level classification as a separate task — pattern detection is structural (graph-level).
 
 ### Decision 4: GNN architecture for pattern detection
 
@@ -71,13 +69,24 @@ Phases 1–4 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`, `xai-fr
 
 ### Decision 6: Data storage and loading
 
-**Choice:** Each phase implements its own `data_loader.py` that generates synthetic data into the shared `data/` directory at project root. Phase 05's loader generates graphs with known fraud patterns (motifs, rings, stars) for pattern detection testing.
+**Choice:** Each phase implements its own `data_loader.py` that generates synthetic data into a dedicated subdirectory `data/synthetic-patterns/` at project root. Phase 05's loader generates graphs with known fraud patterns (Mitme, Cascade, Money Mule) for pattern detection testing.
 
-**Rationale:** Self-contained data loading ensures each phase can independently generate and verify its test data. Writing to the shared `data/` directory maintains consistency with the project's data management convention while keeping generation logic co-located with the phase that needs it.
+**Rationale:** Self-contained data loading ensures each phase can independently generate and verify its test data. Using a dedicated subdirectory `data/synthetic-patterns/` avoids conflicts with other phases that generate synthetic data (e.g., Phase 08 uses `data/synthetic-scaling/`) while maintaining consistency with the project's data management convention.
 
 **Alternatives considered:**
 - Centralized data generation in a shared utility — couples phases to a single data pipeline and makes independent testing harder.
 - In-memory data generation without persistence — loses ability to inspect, cache, and share generated datasets across runs.
+
+### Decision 7: Interactive exercises with linked notebooks
+
+**Choice:** Each lesson's Practice section links to an interactive Jupyter notebook in `exercises/` directory.
+
+**Rationale:** Practice exercises in markdown are static text. Linking to notebooks allows users to open, run, and modify code directly. Minimal template: setup code, task description, empty code cell for user solution, solution in markdown code block.
+
+**Alternatives considered:**
+- All exercises in one notebook — harder to navigate, no clear mapping to lessons
+- Exercises embedded in lesson notebooks — mixes demonstration and practice
+- Practice only in markdown — requires copy-paste, less interactive
 
 ## Risks / Trade-offs
 
@@ -86,7 +95,6 @@ Phases 1–4 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`, `xai-fr
 | Synthetic patterns may be too easy (100% detection) — providing no meaningful signal | Inject increasing levels of noise and obfuscation; compare detection quality against progressively harder variants |
 | Small synthetic graphs (10–50 nodes) may not generalize to real-world patterns | Explicitly document graph size limitations; use synthetic patterns as proof-of-concept only |
 | GNN models may fail to learn patterns due to noise or insufficient training | Use balanced training sets; increase training epochs; report convergence status |
-| XAI explanations may not align with pattern structure due to model overfitting | Use hold-out validation sets; report misalignment as a valid finding, not a failure |
 | Pattern detection may require more features than available in IEEE-CIS schema | Augment synthetic features with hand-crafted structural indicators (degree centrality, betweenness) for ablation study |
 
 ## Migration Plan
@@ -123,7 +131,7 @@ Each lesson follows a consistent 5-part structure:
 | Notebook | Focus |
 |----------|-------|
 | `01-motif-discovery.ipynb` | Interactive motif discovery on synthetic fraud graphs — generate patterns, count motifs, compare against random baselines |
-| `02-pattern-analysis.ipynb` | End-to-end pattern analysis — train classifiers, run XAI, generate templates, visualize results |
+| `02-pattern-analysis.ipynb` | End-to-end pattern analysis — train classifiers, generate templates, visualize results |
 
 ## Open Questions
 

@@ -2,6 +2,8 @@
 
 Phase 3 (`structural-encoding`) determined which structural encoding best serves GCN fraud detection. The models (GCN, and potentially GAT for attention-based explanations) now produce predictions, but without explanations these predictions are opaque to fraud investigators. The project has no XAI infrastructure yet. PyG provides GNNExplainer natively, and PGExplainer is a separate PyG package. GAT models (which can be built on top of `MinimalGCN` with GATConv) provide self-explanatory attention weights.
 
+**Note:** Validation against synthetic patterns is deferred to Phase 05b, which runs after Phase 05 generates synthetic fraud patterns.
+
 ## Goals / Non-Goals
 
 **Goals:**
@@ -58,7 +60,7 @@ Phase 3 (`structural-encoding`) determined which structural encoding best serves
 **Rationale:** Chargeback labels on real data provide domain-relevant validation of explanation quality. This ensures XAI outputs align with actual fraud signals recognized by the payment system.
 
 **Alternatives considered:**
-- Validation against synthetic patterns with known structure — deferred to Phase 04b after synthetic patterns are generated in Phase 05.
+- Validation against synthetic patterns with known structure — deferred to Phase 05b after synthetic patterns are generated in Phase 05.
 - Human evaluation by fraud analysts — expensive and not reproducible.
 - Permutation importance — measures feature importance but not structural explanation quality.
 
@@ -94,6 +96,14 @@ Phase 3 (`structural-encoding`) determined which structural encoding best serves
 - Phase-specific data directories — leads to duplicate data on disk.
 - No download capability — requires manual data setup, reducing reproducibility.
 
+### Decision 8: Interactive exercises with linked notebooks
+**Choice:** Each lesson's Practice section links to an interactive Jupyter notebook in `exercises/` directory.
+**Rationale:** Practice exercises in markdown are static text. Linking to notebooks allows users to open, run, and modify code directly. Minimal template: setup code, task description, empty code cell for user solution, solution in markdown code block.
+**Alternatives considered:**
+- All exercises in one notebook — harder to navigate, no clear mapping to lessons
+- Exercises embedded in lesson notebooks — mixes demonstration and practice
+- Practice only in markdown — requires copy-paste, less interactive
+
 ## Risks / Trade-offs
 
 | Risk | Mitigation |
@@ -108,9 +118,9 @@ Phase 3 (`structural-encoding`) determined which structural encoding best serves
 
 This is a greenfield XAI module. No migration from existing code is needed.
 
-1. Create `phases/phase04_xai_fraud/src/phase04_xai_fraud/` module with `gnnexplainer.py`, `pgexplainer.py`, `gat_attention.py`, `validation.py`, `leads.py`, `comparison.py`.
+1. Create `phases/phase04a_xai_basics/src/phase04a_xai_basics/` module with `gnnexplainer.py`, `pgexplainer.py`, `gat_attention.py`, `validation.py`, `leads.py`, `comparison.py`.
 2. Integrate with existing GCN model from Phase 2 / structural encodings from Phase 3.
-3. Add test suite under `phases/phase04_xai_fraud/tests/`.
+3. Add test suite under `phases/phase04a_xai_basics/tests/`.
 4. Create run script `run_xai.py` for end-to-end explanation pipeline.
 
 ## Educational Content

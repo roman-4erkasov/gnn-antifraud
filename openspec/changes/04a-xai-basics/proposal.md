@@ -1,6 +1,6 @@
 ## Why
 
-Phase 3 (`structural-encoding`) established which structural encoding maximizes GCN fraud detection performance. But a model that predicts fraud without explaining why is useless for investigators — fraud teams need to understand *why* a transaction was flagged to justify investigations, comply with regulations, and prevent false positives that damage customer experience. XAI transforms opaque model outputs into actionable intelligence. This phase integrates GNNExplainer, PGExplainer, and GAT attention weights to produce validated, human-readable explanations tied to known fraud patterns.
+Phase 3 (`structural-encoding`) established which structural encoding maximizes GCN fraud detection performance. But a model that predicts fraud without explaining why is useless for investigators — fraud teams need to understand *why* a transaction was flagged to justify investigations, comply with regulations, and prevent false positives that damage customer experience. XAI transforms opaque model outputs into actionable intelligence. This phase integrates GNNExplainer, PGExplainer, and GAT attention weights to produce validated, human-readable explanations tied to known fraud signals (chargeback labels).
 
 ## What Changes
 
@@ -16,7 +16,7 @@ Phase 3 (`structural-encoding`) established which structural encoding maximizes 
 
 ### New Capabilities
 
-- `phase04_xai_fraud`: GNNExplainer node-level explanation, PGExplainer edge-level explanation, GAT attention weight extraction, explanation validation against chargeback ground truth, investigation lead generation, cross-method explanation comparison
+- `phase04a_xai_basics`: GNNExplainer node-level explanation, PGExplainer edge-level explanation, GAT attention weight extraction, explanation validation against chargeback ground truth, investigation lead generation, cross-method explanation comparison
 
 ### Modified Capabilities
 
@@ -25,14 +25,14 @@ Phase 3 (`structural-encoding`) established which structural encoding maximizes 
 
 ## Impact
 
-- Self-contained phase under `phases/phase04_xai_fraud/`:
-  - `src/phase04_xai_fraud/data_loader.py`: Data loading and graph construction for XAI analysis
-  - `src/phase04_xai_fraud/gnnexplainer.py`: GNNExplainer integration, node mask extraction
-  - `src/phase04_xai_fraud/pgexplainer.py`: PGExplainer edge explanation model
-  - `src/phase04_xai_fraud/gat_attention.py`: Attention weight extraction and aggregation
-  - `src/phase04_xai_fraud/validation.py`: Explanation validation against ground truth patterns
-  - `src/phase04_xai_fraud/leads.py`: Investigation lead generation from explanation outputs
-  - `src/phase04_xai_fraud/comparison.py`: Cross-method explanation comparison (Jaccard, overlap)
+- Self-contained phase under `phases/phase04a_xai_basics/`:
+  - `src/phase04a_xai_basics/data_loader.py`: Data loading and graph construction for XAI analysis
+  - `src/phase04a_xai_basics/gnnexplainer.py`: GNNExplainer integration, node mask extraction
+  - `src/phase04a_xai_basics/pgexplainer.py`: PGExplainer edge explanation model
+  - `src/phase04a_xai_basics/gat_attention.py`: Attention weight extraction and aggregation
+  - `src/phase04a_xai_basics/validation.py`: Explanation validation against chargeback labels
+  - `src/phase04a_xai_basics/leads.py`: Investigation lead generation from explanation outputs
+  - `src/phase04a_xai_basics/comparison.py`: Cross-method explanation comparison (Jaccard, overlap)
   - `tests/`: Test suite for all XAI components
   - `run_xai.py`: End-to-end XAI pipeline script
   - `lessons/`
@@ -46,6 +46,7 @@ Phase 3 (`structural-encoding`) established which structural encoding maximizes 
     - `01-explaining-predictions.ipynb`
     - `02-feature-importance-analysis.ipynb`
     - `03-calibration-curves.ipynb`
+  - `exercises/`: interactive Jupyter notebooks for Practice sections (linked from lessons)
 - Uses existing: `src/utils/metrics.py`, `phases/phase02_minimal_gnn/src/phase02_minimal_gnn/` (GCN models)
 - Dependency: torch-geometric-explain (PyG >= 3.0)
 - No breaking changes to existing codebase

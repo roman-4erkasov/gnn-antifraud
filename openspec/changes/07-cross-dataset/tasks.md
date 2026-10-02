@@ -61,26 +61,35 @@
 
 ## 8. Educational content — lessons
 
-- [ ] 8.1 Create `phases/phase07_cross_dataset/lessons/01-cross-dataset-challenges.md` covering why models fail across datasets: distribution shift, feature incompatibility, label definition differences; follow 5-part structure (Explain, Code, Visualize, Practice, Solution)
-- [ ] 8.2 Create `phases/phase07_cross_dataset/lessons/02-transfer-learning.md` covering fine-tuning pretrained models on target datasets, transfer curves across label fractions; follow 5-part structure
-- [ ] 8.3 Create `phases/phase07_cross_dataset/lessons/03-domain-adaptation.md` covering techniques for reducing domain shift: feature alignment, distribution matching; follow 5-part structure
-- [ ] 8.4 Create `phases/phase07_cross_dataset/lessons/04-dataset-comparison.md` covering systematic comparison of dataset characteristics: schema overlap, distribution distances; follow 5-part structure
-- [ ] 8.5 Create `phases/phase07_cross_dataset/lessons/05-generalization-strategies.md` covering strategies for improving cross-dataset generalization: ensemble methods, feature selection, regularization; follow 5-part structure
+- [ ] 8.1 Create `phases/phase07_cross_dataset/lessons/01-cross-dataset-challenges.md` covering why models fail across datasets: distribution shift, feature incompatibility, label definition differences; follow 5-part structure (Explain, Code, Visualize, Practice, Solution); link Practice section to `exercises/01-cross-dataset-challenges.ipynb`
+- [ ] 8.2 Create `phases/phase07_cross_dataset/lessons/02-transfer-learning.md` covering fine-tuning pretrained models on target datasets, transfer curves across label fractions; follow 5-part structure; link Practice section to `exercises/02-transfer-learning.ipynb`
+- [ ] 8.3 Create `phases/phase07_cross_dataset/lessons/03-domain-adaptation.md` covering techniques for reducing domain shift: feature alignment, distribution matching; follow 5-part structure; link Practice section to `exercises/03-domain-adaptation.ipynb`
+- [ ] 8.4 Create `phases/phase07_cross_dataset/lessons/04-dataset-comparison.md` covering systematic comparison of dataset characteristics: schema overlap, distribution distances; follow 5-part structure; link Practice section to `exercises/04-dataset-comparison.ipynb`
+- [ ] 8.5 Create `phases/phase07_cross_dataset/lessons/05-generalization-strategies.md` covering strategies for improving cross-dataset generalization: ensemble methods, feature selection, regularization; follow 5-part structure; link Practice section to `exercises/05-generalization-strategies.ipynb`
 
 ## 9. Educational content — notebooks
 
 - [ ] 9.1 Create `phases/phase07_cross_dataset/notebooks/01-transfer-analysis.ipynb` with hands-on transfer learning walkthrough: train on source dataset, fine-tune on target, visualize transfer curves across label fractions; include code cells, markdown explanations, and output visualizations
 - [ ] 9.2 Create `phases/phase07_cross_dataset/notebooks/02-cross-dataset-evaluation.ipynb` with full cross-dataset evaluation pipeline: pairwise model comparison, bootstrapping confidence intervals, significance testing, report generation; include code cells, markdown explanations, and output visualizations
 
-## 10. Integration and verification
+## 10. Interactive exercises (exercises/)
 
-- [ ] 10.1 Create `phases/phase07_cross_dataset/run_cross_dataset.py` that runs full cross-dataset evaluation on all datasets, models, computes CIs, significance tests, transfer curves, feature report, and generates final report; verify script runs without errors
-- [ ] 10.2 Print summary: per-dataset model rankings, overall best model, best/worst transfers, stop decision check; verify output is human-readable
-- [ ] 10.3 Implement stop decision check: if no model achieves PR-AUC >= 0.30 on ANY cross-dataset test set, print "⚠ Cross-dataset transfer is not viable with current approaches"
-- [ ] 10.4 Create `phases/phase07_cross_dataset/tests/test_compare.py` with tests for cross-dataset comparison framework — verify model registration, pairwise evaluation, comparison matrix; verify with pytest
-- [ ] 10.5 Create `phases/phase07_cross_dataset/tests/test_statistics.py` with tests for bootstrapping and significance tests — verify CIs are valid, p-values in [0, 1], BH correction works; verify with pytest
-- [ ] 10.6 Create `phases/phase07_cross_dataset/tests/test_transfer.py` with tests for transfer evaluation — verify fine-tuning runs, compare_with_scratch works, transfer_curve produces multiple points; verify with pytest
-- [ ] 10.7 Create `phases/phase07_cross_dataset/tests/test_feature_compat.py` with tests for feature analysis — verify overlap detection, distribution comparison, recommendations; verify with pytest
-- [ ] 10.8 Create `phases/phase07_cross_dataset/tests/test_integration.py` with end-to-end test: small synthetic datasets, run full comparison, verify report generates; verify with pytest
-- [ ] 10.9 Run full test suite `pytest phases/phase07_cross_dataset/tests/ -v` and verify all tests pass including new cross-dataset tests
-- [ ] 10.10 Run `phases/phase07_cross_dataset/run_cross_dataset.py` end-to-end with synthetic data and verify: all evaluations complete, CIs computed, significance tested, transfer curves generated, report exported, stop decision check passes; confirm exit code 0
+- [ ] 10.1 Create `phases/phase07_cross_dataset/exercises/` directory
+- [ ] 10.2 Create `01-cross-dataset-challenges.ipynb` with task to analyze distribution shift between datasets
+- [ ] 10.3 Create `02-transfer-learning.ipynb` with task to fine-tune a model on a target dataset
+- [ ] 10.4 Create `03-domain-adaptation.ipynb` with task to align feature distributions
+- [ ] 10.5 Create `04-dataset-comparison.ipynb` with task to compare dataset schemas and distributions
+- [ ] 10.6 Create `05-generalization-strategies.ipynb` with task to evaluate cross-dataset generalization
+
+## 11. Integration and verification
+
+- [ ] 11.1 Create `phases/phase07_cross_dataset/run_cross_dataset.py` that runs full cross-dataset evaluation on all datasets, models, computes CIs, significance tests, transfer curves, feature report, and generates final report; verify script runs without errors
+- [ ] 11.2 Print summary: per-dataset model rankings, overall best model, best/worst transfers, stop decision check; verify output is human-readable
+- [ ] 11.3 Implement stop decision check: if no model achieves PR-AUC >= 0.30 on ANY cross-dataset test set, print "⚠ Cross-dataset transfer is not viable with current approaches"
+- [ ] 11.4 Create `phases/phase07_cross_dataset/tests/test_compare.py` with tests for cross-dataset comparison framework — verify model registration, pairwise evaluation, comparison matrix; verify with pytest
+- [ ] 11.5 Create `phases/phase07_cross_dataset/tests/test_statistics.py` with tests for bootstrapping and significance tests — verify CIs are valid, p-values in [0, 1], BH correction works; verify with pytest
+- [ ] 11.6 Create `phases/phase07_cross_dataset/tests/test_transfer.py` with tests for transfer evaluation — verify fine-tuning runs, compare_with_scratch works, transfer_curve produces multiple points; verify with pytest
+- [ ] 11.7 Create `phases/phase07_cross_dataset/tests/test_feature_compat.py` with tests for feature analysis — verify overlap detection, distribution comparison, recommendations; verify with pytest
+- [ ] 11.8 Create `phases/phase07_cross_dataset/tests/test_integration.py` with end-to-end test: small synthetic datasets, run full comparison, verify report generates; verify with pytest
+- [ ] 11.9 Run full test suite `pytest phases/phase07_cross_dataset/tests/ -v` and verify all tests pass including new cross-dataset tests
+- [ ] 11.10 Run `phases/phase07_cross_dataset/run_cross_dataset.py` end-to-end with synthetic data and verify: all evaluations complete, CIs computed, significance tested, transfer curves generated, report exported, stop decision check passes; confirm exit code 0

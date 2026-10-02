@@ -32,6 +32,7 @@ None. This phase uses trained models from phases 02-08 but does not modify their
   - `run_distributed_inference.py`: End-to-end distributed inference script
   - `lessons/`: 6 markdown lessons following 5-part structure (Explain, Code, Visualize, Practice, Solution)
   - `notebooks/`: 3 interactive Jupyter notebooks for experimentation
+  - `exercises/`: interactive Jupyter notebooks for Practice sections (linked from lessons)
 - Uses trained models from phases 02-08 (soft dependency — can be developed with mock models)
 - Requires Docker for local Spark cluster (1 master + 2 workers); no external Hadoop needed
 - No breaking changes to existing codebase

@@ -32,6 +32,7 @@ None. This phase evaluates external frameworks without modifying existing code.
   - `run_framework_comparison.py`: End-to-end comparison script
   - `lessons/`: 5 markdown lessons covering each framework + comparison methodology
   - `notebooks/`: 2 interactive notebooks for benchmark exploration
+  - `exercises/`: interactive Jupyter notebooks for Practice sections (linked from lessons)
 - Requires multi-GPU cluster for Quiver benchmarks
 - Requires DGL, AliGraph, and Quiver installations (may need separate environments)
 - No breaking changes to existing codebase

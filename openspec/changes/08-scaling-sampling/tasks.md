@@ -68,36 +68,46 @@
 - [ ] 8.5 Implement `train_with_sampling(model, data, sampler, epochs=50, lr=0.001)` function training any PyG model with the specified sampler; verify works with GCN from Phase 02 and TGN/GRN from Phase 06
 - [ ] 8.6 Implement `compare_sampling_vs_full_graph(model, data, sampler, epochs=50, lr=0.001)` comparing sampling-based and full-graph training; verify output includes PR-AUC, time, memory for both
 
-## 9. Unit tests
+## 9. Interactive exercises (exercises/)
 
-- [ ] 9.1 Create `phases/phase08_scaling_sampling/tests/test_neighbor.py` with tests for Neighbor Sampling — verify correct subgraph sizes, fanout enforcement, valid PyG output; verify with pytest
-- [ ] 9.2 Create `phases/phase08_scaling_sampling/tests/test_graphsaint.py` with tests for GraphSAINT — verify vertex/edge/subgraph sampling, importance weights, batch generation; verify with pytest
-- [ ] 9.3 Create `phases/phase08_scaling_sampling/tests/test_graphbolt.py` with tests for GraphBolt integration — verify fallback to NeighborSampler when GraphBolt unavailable; verify with pytest
-- [ ] 9.4 Create `phases/phase08_scaling_sampling/tests/test_partition.py` with tests for graph partitioning — verify partition balance, edge-cut ratio, partition export; verify with pytest
-- [ ] 9.5 Create `phases/phase08_scaling_sampling/tests/test_scaling_benchmark.py` with tests for benchmark framework — verify metric computation, fanout curve, depth curve; verify with pytest
-- [ ] 9.6 Create `phases/phase08_scaling_sampling/tests/test_scaling.py` with tests for scaling benchmark — verify synthetic graph generation, throughput measurement, extrapolation; verify with pytest
-- [ ] 9.7 Create `phases/phase08_scaling_sampling/tests/test_integration.py` with end-to-end test: generate small graph, train GCN with neighbor sampling, verify metrics are comparable to full-graph; verify with pytest
+- [ ] 9.1 Create `phases/phase08_scaling_sampling/exercises/` directory
+- [ ] 9.2 Create `01-scaling-challenges.ipynb` with task to measure memory usage
+- [ ] 9.3 Create `02-mini-batch-training.ipynb` with task to implement mini-batch training
+- [ ] 9.4 Create `03-negative-sampling.ipynb` with task to compare sampling strategies
+- [ ] 9.5 Create `04-graph-sampling.ipynb` with task to sample subgraphs
+- [ ] 9.6 Create `05-memory-optimization.ipynb` with task to optimize memory usage
+- [ ] 9.7 Create `06-production-considerations.ipynb` with task to design production pipeline
 
-## 10. Educational content — lessons
+## 10. Unit tests
 
-- [ ] 10.1 Create `phases/phase08_scaling_sampling/lessons/01-scaling-challenges.md` following 5-part structure (Explain, Code, Visualize, Practice, Solution) covering why GNNs don't scale naively — O(N) memory, message-passing cost, and motivation for sampling; verify file exists and contains all 5 sections
-- [ ] 10.2 Create `phases/phase08_scaling_sampling/lessons/02-mini-batch-training.md` following 5-part structure covering Neighbor Sampling and GraphSAINT mini-batch training — how to train on subgraphs instead of the full graph; verify file exists and contains all 5 sections
-- [ ] 10.3 Create `phases/phase08_scaling_sampling/lessons/03-negative-sampling.md` following 5-part structure covering negative sampling strategies for fraud detection — how to sample non-fraud nodes efficiently in imbalanced graphs; verify file exists and contains all 5 sections
-- [ ] 10.4 Create `phases/phase08_scaling_sampling/lessons/04-graph-sampling.md` following 5-part structure covering graph partitioning and distributed training — METIS/K-way partitioning for splitting a 300M-node graph; verify file exists and contains all 5 sections
-- [ ] 10.5 Create `phases/phase08_scaling_sampling/lessons/05-memory-optimization.md` following 5-part structure covering memory optimization techniques — fanout tuning, feature caching, and gradient checkpointing for large graphs; verify file exists and contains all 5 sections
-- [ ] 10.6 Create `phases/phase08_scaling_sampling/lessons/06-production-considerations.md` following 5-part structure covering production deployment — latency requirements, model serving at scale, and monitoring sampling quality; verify file exists and contains all 5 sections
+- [ ] 10.1 Create `phases/phase08_scaling_sampling/tests/test_neighbor.py` with tests for Neighbor Sampling — verify correct subgraph sizes, fanout enforcement, valid PyG output; verify with pytest
+- [ ] 10.2 Create `phases/phase08_scaling_sampling/tests/test_graphsaint.py` with tests for GraphSAINT — verify vertex/edge/subgraph sampling, importance weights, batch generation; verify with pytest
+- [ ] 10.3 Create `phases/phase08_scaling_sampling/tests/test_graphbolt.py` with tests for GraphBolt integration — verify fallback to NeighborSampler when GraphBolt unavailable; verify with pytest
+- [ ] 10.4 Create `phases/phase08_scaling_sampling/tests/test_partition.py` with tests for graph partitioning — verify partition balance, edge-cut ratio, partition export; verify with pytest
+- [ ] 10.5 Create `phases/phase08_scaling_sampling/tests/test_scaling_benchmark.py` with tests for benchmark framework — verify metric computation, fanout curve, depth curve; verify with pytest
+- [ ] 10.6 Create `phases/phase08_scaling_sampling/tests/test_scaling.py` with tests for scaling benchmark — verify synthetic graph generation, throughput measurement, extrapolation; verify with pytest
+- [ ] 10.7 Create `phases/phase08_scaling_sampling/tests/test_integration.py` with end-to-end test: generate small graph, train GCN with neighbor sampling, verify metrics are comparable to full-graph; verify with pytest
 
-## 11. Educational content — notebooks
+## 11. Educational content — lessons
 
-- [ ] 11.1 Create `phases/phase08_scaling_sampling/notebooks/01-scaling-experiments.ipynb` with cells that run scaling benchmarks across graph sizes, compare sampling strategies, and visualize speed/quality tradeoffs; verify notebook executes without errors
-- [ ] 11.2 Create `phases/phase08_scaling_sampling/notebooks/02-sampling-strategies.ipynb` with cells that compare Neighbor Sampling, GraphSAINT, and GraphBolt on the same graph — tune fanout, depth, and batch size; verify notebook executes without errors
-- [ ] 11.3 Create `phases/phase08_scaling_sampling/notebooks/03-performance-benchmarks.ipynb` with cells that profile throughput, memory, and PR-AUC; extrapolate to 300M nodes; reproduce the stop decision analysis; verify notebook executes without errors
+- [ ] 11.1 Create `phases/phase08_scaling_sampling/lessons/01-scaling-challenges.md` following 5-part structure (Explain, Code, Visualize, Practice, Solution) covering why GNNs don't scale naively — O(N) memory, message-passing cost, and motivation for sampling; link Practice section to `exercises/01-scaling-challenges.ipynb`; verify file exists and contains all 5 sections
+- [ ] 11.2 Create `phases/phase08_scaling_sampling/lessons/02-mini-batch-training.md` following 5-part structure covering Neighbor Sampling and GraphSAINT mini-batch training — how to train on subgraphs instead of the full graph; link Practice section to `exercises/02-mini-batch-training.ipynb`; verify file exists and contains all 5 sections
+- [ ] 11.3 Create `phases/phase08_scaling_sampling/lessons/03-negative-sampling.md` following 5-part structure covering negative sampling strategies for fraud detection — how to sample non-fraud nodes efficiently in imbalanced graphs; link Practice section to `exercises/03-negative-sampling.ipynb`; verify file exists and contains all 5 sections
+- [ ] 11.4 Create `phases/phase08_scaling_sampling/lessons/04-graph-sampling.md` following 5-part structure covering graph partitioning and distributed training — METIS/K-way partitioning for splitting a 300M-node graph; link Practice section to `exercises/04-graph-sampling.ipynb`; verify file exists and contains all 5 sections
+- [ ] 11.5 Create `phases/phase08_scaling_sampling/lessons/05-memory-optimization.md` following 5-part structure covering memory optimization techniques — fanout tuning, feature caching, and gradient checkpointing for large graphs; link Practice section to `exercises/05-memory-optimization.ipynb`; verify file exists and contains all 5 sections
+- [ ] 11.6 Create `phases/phase08_scaling_sampling/lessons/06-production-considerations.md` following 5-part structure covering production deployment — latency requirements, model serving at scale, and monitoring sampling quality; link Practice section to `exercises/06-production-considerations.ipynb`; verify file exists and contains all 5 sections
 
-## 12. End-to-end scaling pipeline
+## 12. Educational content — notebooks
 
-- [ ] 12.1 Create `phases/phase08_scaling_sampling/run_scaling.py` that generates scaling graphs, runs all sampling strategies, benchmarks, partitions, extrapolates to 300M, and generates report; verify script runs without errors
-- [ ] 12.2 Print summary: best strategy, best fanout, best depth, extrapolated 300M requirements, stop decision check; verify output is human-readable
-- [ ] 12.3 Implement stop decision check: if no sampling strategy achieves PR-AUC >= 0.85 × full-graph PR-AUC while being 2× faster, print "⚠ Sampling quality is insufficient for the target graph size"
-- [ ] 12.4 Save benchmark results to `outputs/scaling_benchmark.json`; verify file exists and is valid JSON
-- [ ] 12.5 Run full test suite `pytest phases/phase08_scaling_sampling/tests/ -v` and verify all tests pass including new sampling tests
-- [ ] 12.6 Run `phases/phase08_scaling_sampling/run_scaling.py` end-to-end with synthetic data and verify: all strategies benchmarked, scaling curve generated, partition evaluated, 300M extrapolation produced, stop decision check passes; confirm exit code 0
+- [ ] 12.1 Create `phases/phase08_scaling_sampling/notebooks/01-scaling-experiments.ipynb` with cells that run scaling benchmarks across graph sizes, compare sampling strategies, and visualize speed/quality tradeoffs; verify notebook executes without errors
+- [ ] 12.2 Create `phases/phase08_scaling_sampling/notebooks/02-sampling-strategies.ipynb` with cells that compare Neighbor Sampling, GraphSAINT, and GraphBolt on the same graph — tune fanout, depth, and batch size; verify notebook executes without errors
+- [ ] 12.3 Create `phases/phase08_scaling_sampling/notebooks/03-performance-benchmarks.ipynb` with cells that profile throughput, memory, and PR-AUC; extrapolate to 300M nodes; reproduce the stop decision analysis; verify notebook executes without errors
+
+## 13. End-to-end scaling pipeline
+
+- [ ] 13.1 Create `phases/phase08_scaling_sampling/run_scaling.py` that generates scaling graphs, runs all sampling strategies, benchmarks, partitions, extrapolates to 300M, and generates report; verify script runs without errors
+- [ ] 13.2 Print summary: best strategy, best fanout, best depth, extrapolated 300M requirements, stop decision check; verify output is human-readable
+- [ ] 13.3 Implement stop decision check: if no sampling strategy achieves PR-AUC >= 0.85 × full-graph PR-AUC while being 2× faster, print "⚠ Sampling quality is insufficient for the target graph size"
+- [ ] 13.4 Save benchmark results to `outputs/scaling_benchmark.json`; verify file exists and is valid JSON
+- [ ] 13.5 Run full test suite `pytest phases/phase08_scaling_sampling/tests/ -v` and verify all tests pass including new sampling tests
+- [ ] 13.6 Run `phases/phase08_scaling_sampling/run_scaling.py` end-to-end with synthetic data and verify: all strategies benchmarked, scaling curve generated, partition evaluated, 300M extrapolation produced, stop decision check passes; confirm exit code 0

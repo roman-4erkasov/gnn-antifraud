@@ -47,26 +47,35 @@
 - [ ] 9.1 Implement `select_best_encoding(encoding_results)` selecting encoding with highest PR-AUC, ties broken by lowest Brier score; verify correct selection on synthetic results
 - [ ] 9.2 Produce comparison report with all encoding results, best encoding recommendation, and SHAP feature importance summaries
 
-## 10. Tests
+## 10. Interactive exercises (exercises/)
 
-- [ ] 10.1 Create `phases/phase03_structural_encoding/tests/test_structural_encodings.py` with tests for each encoding function — ReCWE output shape, RWSE output shape, spectral encoding shape, community labels valid range; verify with `pytest phases/phase03_structural_encoding/tests/test_structural_encodings.py -v`
-- [ ] 10.2 Test spectral encoding on disconnected graph (multiple components); verify no errors
-- [ ] 10.3 Test community detection on bipartite graph with known community structure; verify labels assign colluding pairs to same community
+- [ ] 10.1 Create `phases/phase03_structural_encoding/exercises/` directory
+- [ ] 10.2 Create `01-spectral-graph-theory.ipynb` with setup code and task to compute graph Laplacian eigenvalues
+- [ ] 10.3 Create `02-laplacian-eigenvectors.ipynb` with task to compute and visualize Fiedler vector
+- [ ] 10.4 Create `03-random-walk-features.ipynb` with task to compute RWSE features from random walks
+- [ ] 10.5 Create `04-community-detection.ipynb` with task to run Louvain and analyze community structure
+- [ ] 10.6 Create `05-structural-features-for-fraud.ipynb` with task to combine encodings and evaluate impact
 
-## 11. Educational content — lessons
+## 11. Tests
 
-- [ ] 11.1 Create `lessons/01-spectral-graph-theory.md` covering adjacency matrix, degree matrix, graph Laplacian, and eigenvalues; follow 5-part structure (Explain, Code, Visualize, Practice, Solution); verify file renders correctly in Markdown
-- [ ] 11.2 Create `lessons/02-laplacian-eigenvectors.md` covering normalized Laplacian, Fiedler vector, truncated eigendecomposition, and their use as positional encodings; follow 5-part structure; verify code snippet runs
-- [ ] 11.3 Create `lessons/03-random-walk-features.md` covering transition matrix, visitation frequency, RWSE, and ReCWE; follow 5-part structure; verify code snippet runs
-- [ ] 11.4 Create `lessons/04-community-detection.md` covering modularity optimization, Louvain algorithm, resolution parameter, and community labels as features; follow 5-part structure; verify code snippet runs
-- [ ] 11.5 Create `lessons/05-structural-features-for-fraud.md` covering fraudster structural patterns, combining encodings, and feature engineering strategies; follow 5-part structure; verify code snippet runs
+- [ ] 11.1 Create `phases/phase03_structural_encoding/tests/test_structural_encodings.py` with tests for each encoding function — ReCWE output shape, RWSE output shape, spectral encoding shape, community labels valid range; verify with `pytest phases/phase03_structural_encoding/tests/test_structural_encodings.py -v`
+- [ ] 11.2 Test spectral encoding on disconnected graph (multiple components); verify no errors
+- [ ] 11.3 Test community detection on bipartite graph with known community structure; verify labels assign colluding pairs to same community
 
-## 12. Educational content — notebooks
+## 12. Educational content — lessons
 
-- [ ] 12.1 Create `notebooks/01-exploring-eigenvectors.ipynb` — compute Laplacian eigenvectors on a synthetic fraud graph, visualize node embeddings in 2D, observe fraud clustering in spectral space; verify notebook executes end-to-end without errors
-- [ ] 12.2 Create `notebooks/02-community-analysis.ipynb` — run Louvain community detection on the fraud graph, analyze community composition (fraud ratio per community), visualize community structure; verify notebook executes end-to-end without errors
+- [ ] 12.1 Create `lessons/01-spectral-graph-theory.md` covering adjacency matrix, degree matrix, graph Laplacian, and eigenvalues; follow 5-part structure (Explain, Code, Visualize, Practice, Solution); Practice links to `../exercises/01-spectral-graph-theory.ipynb`; verify file renders correctly in Markdown
+- [ ] 12.2 Create `lessons/02-laplacian-eigenvectors.md` covering normalized Laplacian, Fiedler vector, truncated eigendecomposition, and their use as positional encodings; follow 5-part structure; Practice links to `../exercises/02-laplacian-eigenvectors.ipynb`; verify code snippet runs
+- [ ] 12.3 Create `lessons/03-random-walk-features.md` covering transition matrix, visitation frequency, RWSE, and ReCWE; follow 5-part structure; Practice links to `../exercises/03-random-walk-features.ipynb`; verify code snippet runs
+- [ ] 12.4 Create `lessons/04-community-detection.md` covering modularity optimization, Louvain algorithm, resolution parameter, and community labels as features; follow 5-part structure; Practice links to `../exercises/04-community-detection.ipynb`; verify code snippet runs
+- [ ] 12.5 Create `lessons/05-structural-features-for-fraud.md` covering fraudster structural patterns, combining encodings, and feature engineering strategies; follow 5-part structure; Practice links to `../exercises/05-structural-features-for-fraud.ipynb`; verify code snippet runs
 
-## 13. Integration and verification
+## 13. Educational content — notebooks
 
-- [ ] 13.1 Run full test suite `pytest phases/phase03_structural_encoding/tests/ -v` and verify all tests pass including new structural encoding tests
-- [ ] 13.2 Create run script `phases/phase03_structural_encoding/run_structural_encodings.py` that runs all 4 encodings end-to-end on synthetic data; verify output shows comparison table and best encoding recommendation; confirm exit code 0
+- [ ] 13.1 Create `notebooks/01-exploring-eigenvectors.ipynb` — compute Laplacian eigenvectors on a synthetic fraud graph, visualize node embeddings in 2D, observe fraud clustering in spectral space; verify notebook executes end-to-end without errors
+- [ ] 13.2 Create `notebooks/02-community-analysis.ipynb` — run Louvain community detection on the fraud graph, analyze community composition (fraud ratio per community), visualize community structure; verify notebook executes end-to-end without errors
+
+## 14. Integration and verification
+
+- [ ] 14.1 Run full test suite `pytest phases/phase03_structural_encoding/tests/ -v` and verify all tests pass including new structural encoding tests
+- [ ] 14.2 Create run script `phases/phase03_structural_encoding/run_structural_encodings.py` that runs all 4 encodings end-to-end on synthetic data; verify output shows comparison table and best encoding recommendation; confirm exit code 0

@@ -41,25 +41,34 @@
 - [ ] 7.2 Print summary table with GCN, minimal-LightGBM, and graph-aware-LightGBM metrics side by side; verify output is readable
 - [ ] 7.3 Print stop decision output (GNN adds value / minimal value); verify text matches comparison criteria
 
-## 8. Tests
+## 8. Interactive exercises (exercises/)
 
-- [ ] 8.1 Create `phases/phase02_minimal_gnn/tests/test_minimal_gcn.py` with tests for `MinimalGCN` — init layer structure, forward pass output shape, prediction returns valid probabilities; verify with `pytest phases/phase02_minimal_gnn/tests/test_minimal_gcn.py -v`
-- [ ] 8.2 Add tests for node label assignment — single fraud tx labels user 1, all-clean labels user 0; verify correctness
-- [ ] 8.3 Add tests for graph construction — `Data` object has correct node/edge counts from synthetic bipartite graph; verify shapes match expectations
+- [ ] 8.1 Create `phases/phase02_minimal_gnn/exercises/` directory
+- [ ] 8.2 Create `01-introduction-to-gcn.ipynb` with setup code and task to experiment with GCN layers
+- [ ] 8.3 Create `02-graph-construction.ipynb` with task to build graph with different parameters
+- [ ] 8.4 Create `03-training-loop.ipynb` with task to modify learning rate and observe convergence
+- [ ] 8.5 Create `04-evaluation-metrics.ipynb` with task to compute and compare metrics
+- [ ] 8.6 Create `05-comparison-with-lightgbm.ipynb` with task to compare GCN vs LightGBM predictions
 
-## 9. Educational content
+## 9. Tests
 
-- [ ] 9.1 Create `phases/phase02_minimal_gnn/lessons/` directory; verify directory exists
-- [ ] 9.2 Create `phases/phase02_minimal_gnn/lessons/01-introduction-to-gcn.md` following 5-part structure (Explain/Code/Visualize/Practice/Solution); verify file exists and contains all 5 sections
-- [ ] 9.3 Create `phases/phase02_minimal_gnn/lessons/02-graph-construction-for-gnn.md` following 5-part structure; verify file exists and contains all 5 sections
-- [ ] 9.4 Create `phases/phase02_minimal_gnn/lessons/03-training-loop.md` following 5-part structure; verify file exists and contains all 5 sections
-- [ ] 9.5 Create `phases/phase02_minimal_gnn/lessons/04-evaluation-metrics.md` following 5-part structure; verify file exists and contains all 5 sections
-- [ ] 9.6 Create `phases/phase02_minimal_gnn/lessons/05-comparison-with-lightgbm.md` following 5-part structure; verify file exists and contains all 5 sections
-- [ ] 9.7 Create `phases/phase02_minimal_gnn/notebooks/` directory; verify directory exists
-- [ ] 9.8 Create `phases/phase02_minimal_gnn/notebooks/01-exploring-gcn-behavior.ipynb` with sections for loading graph, training GCN, visualizing node embeddings, and analyzing message passing; verify notebook is valid JSON and can be opened
-- [ ] 9.9 Create `phases/phase02_minimal_gnn/notebooks/02-hyperparameter-sweep.ipynb` with sections for testing different learning rates, hidden dimensions, and epochs; verify notebook is valid JSON and can be opened
+- [ ] 9.1 Create `phases/phase02_minimal_gnn/tests/test_minimal_gcn.py` with tests for `MinimalGCN` — init layer structure, forward pass output shape, prediction returns valid probabilities; verify with `pytest phases/phase02_minimal_gnn/tests/test_minimal_gcn.py -v`
+- [ ] 9.2 Add tests for node label assignment — single fraud tx labels user 1, all-clean labels user 0; verify correctness
+- [ ] 9.3 Add tests for graph construction — `Data` object has correct node/edge counts from synthetic bipartite graph; verify shapes match expectations
 
-## 10. Integration and verification
+## 10. Educational content
 
-- [ ] 10.1 Run full test suite `pytest phases/phase02_minimal_gnn/tests/ -v` and verify all tests pass including new GCN tests
-- [ ] 10.2 Run `phases/phase02_minimal_gnn/run_gcn.py` end-to-end with synthetic data (`--sample-limit 50`) and verify: GCN trains, metrics reported, comparison table printed, stop decision output; confirm exit code 0
+- [ ] 10.1 Create `phases/phase02_minimal_gnn/lessons/` directory; verify directory exists
+- [ ] 10.2 Create `phases/phase02_minimal_gnn/lessons/01-introduction-to-gcn.md` following 5-part structure (Explain/Code/Visualize/Practice/Solution); Practice links to `../exercises/01-introduction-to-gcn.ipynb`; verify file exists and contains all 5 sections
+- [ ] 10.3 Create `phases/phase02_minimal_gnn/lessons/02-graph-construction-for-gnn.md` following 5-part structure; Practice links to `../exercises/02-graph-construction.ipynb`; verify file exists and contains all 5 sections
+- [ ] 10.4 Create `phases/phase02_minimal_gnn/lessons/03-training-loop.md` following 5-part structure; Practice links to `../exercises/03-training-loop.ipynb`; verify file exists and contains all 5 sections
+- [ ] 10.5 Create `phases/phase02_minimal_gnn/lessons/04-evaluation-metrics.md` following 5-part structure; Practice links to `../exercises/04-evaluation-metrics.ipynb`; verify file exists and contains all 5 sections
+- [ ] 10.6 Create `phases/phase02_minimal_gnn/lessons/05-comparison-with-lightgbm.md` following 5-part structure; Practice links to `../exercises/05-comparison-with-lightgbm.ipynb`; verify file exists and contains all 5 sections
+- [ ] 10.7 Create `phases/phase02_minimal_gnn/notebooks/` directory; verify directory exists
+- [ ] 10.8 Create `phases/phase02_minimal_gnn/notebooks/01-exploring-gcn-behavior.ipynb` with sections for loading graph, training GCN, visualizing node embeddings, and analyzing message passing; verify notebook is valid JSON and can be opened
+- [ ] 10.9 Create `phases/phase02_minimal_gnn/notebooks/02-hyperparameter-sweep.ipynb` with sections for testing different learning rates, hidden dimensions, and epochs; verify notebook is valid JSON and can be opened
+
+## 11. Integration and verification
+
+- [ ] 11.1 Run full test suite `pytest phases/phase02_minimal_gnn/tests/ -v` and verify all tests pass including new GCN tests
+- [ ] 11.2 Run `phases/phase02_minimal_gnn/run_gcn.py` end-to-end with synthetic data (`--sample-limit 50`) and verify: GCN trains, metrics reported, comparison table printed, stop decision output; confirm exit code 0

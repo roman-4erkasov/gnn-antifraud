@@ -77,6 +77,14 @@ Phase 1 (`lightgbm-baseline`) established both minimal (3-feature) and graph-awa
 - Centralized `src/data/` loaders — breaks phase isolation
 - Embed data in phase directory — doesn't scale for large datasets
 
+### Decision 9: Interactive exercises with linked notebooks
+**Choice:** Each lesson's Practice section links to an interactive Jupyter notebook in `exercises/` directory.
+**Rationale:** Practice exercises in markdown are static text. Linking to notebooks allows users to open, run, and modify code directly. Minimal template: setup code, task description, empty code cell for user solution, solution in markdown code block.
+**Alternatives considered:**
+- All exercises in one notebook — harder to navigate, no clear mapping to lessons
+- Exercises embedded in lesson notebooks — mixes demonstration and practice
+- Practice only in markdown — requires copy-paste, less interactive
+
 ## Risks / Trade-offs
 
 | Risk | Mitigation |

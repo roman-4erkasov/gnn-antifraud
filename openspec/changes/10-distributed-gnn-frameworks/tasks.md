@@ -57,31 +57,40 @@
 - [ ] 7.4 Implement `RecommendationGenerator.generate_report()` generating full report with decision criteria, trade-offs, migration steps; verify report is human-readable
 - [ ] 7.5 Save recommendation report to `outputs/framework_recommendation.md`; verify file exists
 
-## 8. Unit tests
+## 8. Interactive exercises (exercises/)
 
-- [ ] 8.1 Create `phases/phase10_distributed_gnn_frameworks/tests/test_dgl_benchmark.py` with tests for DGL benchmark setup, inference, performance measurement; verify with pytest
-- [ ] 8.2 Create `phases/phase10_distributed_gnn_frameworks/tests/test_aligraph_benchmark.py` with tests for AliGraph benchmark or document if unavailable; verify with pytest
-- [ ] 8.3 Create `phases/phase10_distributed_gnn_frameworks/tests/test_quiver_benchmark.py` with tests for Quiver benchmark setup, inference, GPU/CPU modes; verify with pytest
-- [ ] 8.4 Create `phases/phase10_distributed_gnn_frameworks/tests/test_comparison_harness.py` with tests for unified harness data loading, model loading, result comparison; verify with pytest
-- [ ] 8.5 Create `phases/phase10_distributed_gnn_frameworks/tests/test_recommendation.py` with tests for recommendation generation; verify with pytest
+- [ ] 8.1 Create `phases/phase10_distributed_gnn_frameworks/exercises/` directory
+- [ ] 8.2 Create `01-dgl-distributed.ipynb` with task to setup DGL Distributed
+- [ ] 8.3 Create `02-aligraph.ipynb` with task to configure AliGraph for fraud detection
+- [ ] 8.4 Create `03-quiver.ipynb` with task to benchmark GPU-accelerated sampling
+- [ ] 8.5 Create `04-benchmark-methodology.ipynb` with task to run fair framework comparison
+- [ ] 8.6 Create `05-decision-framework.ipynb` with task to evaluate framework for specific use case
 
-## 9. Educational content — lessons
+## 9. Unit tests
 
-- [ ] 9.1 Create `phases/phase10_distributed_gnn_frameworks/lessons/01-dgl-distributed.md` following 5-part structure (Explain, Code, Visualize, Practice, Solution) covering DGL Distributed architecture, setup, and usage; verify file exists and contains all 5 sections
-- [ ] 9.2 Create `phases/phase10_distributed_gnn_frameworks/lessons/02-aligraph.md` following 5-part structure covering AliGraph for fraud detection; verify file exists and contains all 5 sections
-- [ ] 9.3 Create `phases/phase10_distributed_gnn_frameworks/lessons/03-quiver.md` following 5-part structure covering Quiver GPU-accelerated sampling; verify file exists and contains all 5 sections
-- [ ] 9.4 Create `phases/phase10_distributed_gnn_frameworks/lessons/04-benchmark-methodology.md` following 5-part structure covering how to fairly compare distributed frameworks; verify file exists and contains all 5 sections
-- [ ] 9.5 Create `phases/phase10_distributed_gnn_frameworks/lessons/05-decision-framework.md` following 5-part structure covering how to choose the right framework for your use case; verify file exists and contains all 5 sections
+- [ ] 9.1 Create `phases/phase10_distributed_gnn_frameworks/tests/test_dgl_benchmark.py` with tests for DGL benchmark setup, inference, performance measurement; verify with pytest
+- [ ] 9.2 Create `phases/phase10_distributed_gnn_frameworks/tests/test_aligraph_benchmark.py` with tests for AliGraph benchmark or document if unavailable; verify with pytest
+- [ ] 9.3 Create `phases/phase10_distributed_gnn_frameworks/tests/test_quiver_benchmark.py` with tests for Quiver benchmark setup, inference, GPU/CPU modes; verify with pytest
+- [ ] 9.4 Create `phases/phase10_distributed_gnn_frameworks/tests/test_comparison_harness.py` with tests for unified harness data loading, model loading, result comparison; verify with pytest
+- [ ] 9.5 Create `phases/phase10_distributed_gnn_frameworks/tests/test_recommendation.py` with tests for recommendation generation; verify with pytest
 
-## 10. Educational content — notebooks
+## 10. Educational content — lessons
 
-- [ ] 10.1 Create `phases/phase10_distributed_gnn_frameworks/notebooks/01-framework-comparison.ipynb` with cells that run benchmarks for all frameworks, visualize throughput/memory/scalability, and compare results; verify notebook executes without errors
-- [ ] 10.2 Create `phases/phase10_distributed_gnn_frameworks/notebooks/02-recommendation-explorer.ipynb` with cells that explore different scenarios (graph size, GPU availability, model type) and see framework recommendations; verify notebook executes without errors
+- [ ] 10.1 Create `phases/phase10_distributed_gnn_frameworks/lessons/01-dgl-distributed.md` following 5-part structure (Explain, Code, Visualize, Practice, Solution) covering DGL Distributed architecture, setup, and usage; link Practice section to `exercises/01-dgl-distributed.ipynb`; verify file exists and contains all 5 sections
+- [ ] 10.2 Create `phases/phase10_distributed_gnn_frameworks/lessons/02-aligraph.md` following 5-part structure covering AliGraph for fraud detection; link Practice section to `exercises/02-aligraph.ipynb`; verify file exists and contains all 5 sections
+- [ ] 10.3 Create `phases/phase10_distributed_gnn_frameworks/lessons/03-quiver.md` following 5-part structure covering Quiver GPU-accelerated sampling; link Practice section to `exercises/03-quiver.ipynb`; verify file exists and contains all 5 sections
+- [ ] 10.4 Create `phases/phase10_distributed_gnn_frameworks/lessons/04-benchmark-methodology.md` following 5-part structure covering how to fairly compare distributed frameworks; link Practice section to `exercises/04-benchmark-methodology.ipynb`; verify file exists and contains all 5 sections
+- [ ] 10.5 Create `phases/phase10_distributed_gnn_frameworks/lessons/05-decision-framework.md` following 5-part structure covering how to choose the right framework for your use case; link Practice section to `exercises/05-decision-framework.ipynb`; verify file exists and contains all 5 sections
 
-## 11. End-to-end comparison
+## 11. Educational content — notebooks
 
-- [ ] 11.1 Create `phases/phase10_distributed_gnn_frameworks/run_framework_comparison.py` that runs all benchmarks, compares results, and generates recommendation report; verify script runs without errors
-- [ ] 11.2 Print summary: framework comparison table, best framework for each scenario, recommendation for 300M graph; verify output is human-readable
-- [ ] 11.3 Save benchmark results to `outputs/framework_comparison.json`; verify file exists and is valid JSON
-- [ ] 11.4 Run full test suite `pytest phases/phase10_distributed_gnn_frameworks/tests/ -v` and verify all tests pass; verify exit code 0
-- [ ] 11.5 Run `phases/phase10_distributed_gnn_frameworks/run_framework_comparison.py` end-to-end with synthetic 1M-node graph and verify: all frameworks benchmarked, comparison generated, recommendation produced; confirm exit code 0
+- [ ] 11.1 Create `phases/phase10_distributed_gnn_frameworks/notebooks/01-framework-comparison.ipynb` with cells that run benchmarks for all frameworks, visualize throughput/memory/scalability, and compare results; verify notebook executes without errors
+- [ ] 11.2 Create `phases/phase10_distributed_gnn_frameworks/notebooks/02-recommendation-explorer.ipynb` with cells that explore different scenarios (graph size, GPU availability, model type) and see framework recommendations; verify notebook executes without errors
+
+## 12. End-to-end comparison
+
+- [ ] 12.1 Create `phases/phase10_distributed_gnn_frameworks/run_framework_comparison.py` that runs all benchmarks, compares results, and generates recommendation report; verify script runs without errors
+- [ ] 12.2 Print summary: framework comparison table, best framework for each scenario, recommendation for 300M graph; verify output is human-readable
+- [ ] 12.3 Save benchmark results to `outputs/framework_comparison.json`; verify file exists and is valid JSON
+- [ ] 12.4 Run full test suite `pytest phases/phase10_distributed_gnn_frameworks/tests/ -v` and verify all tests pass; verify exit code 0
+- [ ] 12.5 Run `phases/phase10_distributed_gnn_frameworks/run_framework_comparison.py` end-to-end with synthetic 1M-node graph and verify: all frameworks benchmarked, comparison generated, recommendation produced; confirm exit code 0

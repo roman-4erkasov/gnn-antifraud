@@ -67,6 +67,14 @@ Phase 1 created graph features in `phases/phase01_lightgbm_baseline/src/phase01_
 - Shared data loading module in `src/utils/` — creates coupling between phases; each phase has different graph construction needs.
 - Download data on every run — wasteful; the dataset is large and slow to download.
 
+### Decision 8: Interactive exercises with linked notebooks
+**Choice:** Each lesson's Practice section links to an interactive Jupyter notebook in `exercises/` directory.
+**Rationale:** Practice exercises in markdown are static text. Linking to notebooks allows users to open, run, and modify code directly. Minimal template: setup code, task description, empty code cell for user solution, solution in markdown code block.
+**Alternatives considered:**
+- All exercises in one notebook — harder to navigate, no clear mapping to lessons
+- Exercises embedded in lesson notebooks — mixes demonstration and practice
+- Practice only in markdown — requires copy-paste, less interactive
+
 ## Risks / Trade-offs
 
 | Risk | Mitigation |

@@ -1,6 +1,6 @@
 ## Purpose
 
-Explain model predictions using XAI techniques, validate explanations against known fraud patterns, and generate investigation leads for fraud analysts.
+Explain model predictions using XAI techniques, validate explanations against chargeback labels on real data, and generate investigation leads for fraud analysts.
 
 ## ADDED Requirements
 
@@ -45,20 +45,6 @@ The system SHALL extract and analyze attention weights from GAT models as an alt
 
 - **WHEN** attention weights are extracted from multiple GAT heads
 - **THEN** the system produces a weighted average across heads (weighted by mean attention score) and a per-head importance ranking
-
-### Requirement: Explanation validation against synthetic ground truth
-
-The system SHALL validate XAI explanations by comparing them against known fraud patterns in synthetic datasets.
-
-#### Scenario: Validate against Mitme pattern
-
-- **WHEN** GNNExplainer or PGExplainer explanations are generated for a node in a synthetic Mitme fraud pattern (cluster of colluding accounts)
-- **THEN** the system measures precision and recall of XAI-identified edges/nodes against the known colluding subgraph (top-k edges/nodes compared to ground truth community)
-
-#### Scenario: Validate against Cascade pattern
-
-- **WHEN** explanations are generated for a synthetic Cascade pattern (sequential fund transfers)
-- **THEN** the system measures the extent to which high-importance edges form a path-like structure matching the known cascade chain
 
 ### Requirement: Explanation validation against chargeback labels
 

@@ -40,6 +40,7 @@ Phase 1 of the fraud research established LightGBM baselines (minimal 3-feature 
   - `notebooks/`
     - `01-exploring-gcn-behavior.ipynb`
     - `02-hyperparameter-sweep.ipynb`
+  - `exercises/`: interactive Jupyter notebooks for Practice sections (linked from lessons)
 - Uses existing: `src/utils/calibration.py`, `src/utils/metrics.py`, `phases/phase01_lightgbm_baseline/src/phase01_lightgbm_baseline/graph_features.py`
 - Dependency: PyTorch + PyTorch Geometric
 - No breaking changes to existing codebase

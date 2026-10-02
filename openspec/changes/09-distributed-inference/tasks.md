@@ -63,36 +63,46 @@
 - [ ] 8.5 Implement `DistributedBenchmark.evaluate_stop_decision(speedup, pr_auc_ratio)` checking if executor sampling achieves 2× speedup and 95% PR-AUC; verify output is boolean with detailed finding
 - [ ] 8.6 Implement `DistributedBenchmark.generate_report()` producing human-readable benchmark report; verify output includes all metrics and stop decision
 
-## 9. Unit tests
+## 9. Interactive exercises (exercises/)
 
-- [ ] 9.1 Create `phases/phase09_distributed_inference/tests/test_partition.py` with tests for graph partitioning — verify partition balance, edge-cut ratio, METIS/spectral fallback; verify with pytest
-- [ ] 9.2 Create `phases/phase09_distributed_inference/tests/test_halo.py` with tests for halo management — verify halo completeness, export/load, validation; verify with pytest
-- [ ] 9.3 Create `phases/phase09_distributed_inference/tests/test_sampling_udf.py` with tests for sampling UDF — verify neighbor sampling, fanout enforcement, PyG output; verify with pytest
-- [ ] 9.4 Create `phases/phase09_distributed_inference/tests/test_model_loader.py` with tests for model loading — verify serialization, broadcast, executor loading; verify with pytest
-- [ ] 9.5 Create `phases/phase09_distributed_inference/tests/test_inference_pipeline.py` with tests for inference pipeline — verify partitioning, halo loading, inference, prediction collection; verify with pytest
-- [ ] 9.6 Create `phases/phase09_distributed_inference/tests/test_benchmark.py` with tests for benchmark — verify driver/executor sampling, comparison, stop decision; verify with pytest
-- [ ] 9.7 Create `phases/phase09_distributed_inference/tests/test_integration.py` with end-to-end test: partition small graph, load halo, sample on executor, run inference; verify with pytest
+- [ ] 9.1 Create `phases/phase09_distributed_inference/exercises/` directory
+- [ ] 9.2 Create `01-distributed-systems.ipynb` with task to configure Spark cluster
+- [ ] 9.3 Create `02-graph-partitioning.ipynb` with task to partition a graph
+- [ ] 9.4 Create `03-halo-management.ipynb` with task to compute k-hop halos
+- [ ] 9.5 Create `04-sampling-udf.ipynb` with task to implement sampling UDF
+- [ ] 9.6 Create `05-model-serving.ipynb` with task to broadcast model to executors
+- [ ] 9.7 Create `06-production-deployment.ipynb` with task to tune distributed inference
 
-## 10. Educational content — lessons
+## 10. Unit tests
 
-- [ ] 10.1 Create `phases/phase09_distributed_inference/lessons/01-distributed-systems.md` following 5-part structure (Explain, Code, Visualize, Practice, Solution) covering distributed systems basics — why single-machine inference fails at scale, Spark architecture, executors vs driver; verify file exists and contains all 5 sections
-- [ ] 10.2 Create `phases/phase09_distributed_inference/lessons/02-graph-partitioning.md` following 5-part structure covering graph partitioning — METIS algorithm, spectral partitioning, partition quality metrics; verify file exists and contains all 5 sections
-- [ ] 10.3 Create `phases/phase09_distributed_inference/lessons/03-halo-management.md` following 5-part structure covering halo management — what is a halo, how to compute k-hop neighbors, halo storage; verify file exists and contains all 5 sections
-- [ ] 10.4 Create `phases/phase09_distributed_inference/lessons/04-sampling-udf.md` following 5-part structure covering sampling UDF — mapPartitions, neighbor sampling on executor, PyG Data construction; verify file exists and contains all 5 sections
-- [ ] 10.5 Create `phases/phase09_distributed_inference/lessons/05-model-serving.md` following 5-part structure covering model serving — PyTorch serialization, Spark broadcast, executor model loading; verify file exists and contains all 5 sections
-- [ ] 10.6 Create `phases/phase09_distributed_inference/lessons/06-production-deployment.md` following 5-part structure covering production deployment — memory tuning, performance monitoring, scaling to 300M nodes; verify file exists and contains all 5 sections
+- [ ] 10.1 Create `phases/phase09_distributed_inference/tests/test_partition.py` with tests for graph partitioning — verify partition balance, edge-cut ratio, METIS/spectral fallback; verify with pytest
+- [ ] 10.2 Create `phases/phase09_distributed_inference/tests/test_halo.py` with tests for halo management — verify halo completeness, export/load, validation; verify with pytest
+- [ ] 10.3 Create `phases/phase09_distributed_inference/tests/test_sampling_udf.py` with tests for sampling UDF — verify neighbor sampling, fanout enforcement, PyG output; verify with pytest
+- [ ] 10.4 Create `phases/phase09_distributed_inference/tests/test_model_loader.py` with tests for model loading — verify serialization, broadcast, executor loading; verify with pytest
+- [ ] 10.5 Create `phases/phase09_distributed_inference/tests/test_inference_pipeline.py` with tests for inference pipeline — verify partitioning, halo loading, inference, prediction collection; verify with pytest
+- [ ] 10.6 Create `phases/phase09_distributed_inference/tests/test_benchmark.py` with tests for benchmark — verify driver/executor sampling, comparison, stop decision; verify with pytest
+- [ ] 10.7 Create `phases/phase09_distributed_inference/tests/test_integration.py` with end-to-end test: partition small graph, load halo, sample on executor, run inference; verify with pytest
 
-## 11. Educational content — notebooks
+## 11. Educational content — lessons
 
-- [ ] 11.1 Create `phases/phase09_distributed_inference/notebooks/01-distributed-inference-demo.ipynb` with cells that partition a graph, load halos, run sampling on executor, and collect predictions; verify notebook executes without errors
-- [ ] 11.2 Create `phases/phase09_distributed_inference/notebooks/02-performance-tuning.ipynb` with cells that benchmark driver vs executor sampling, tune partition size and halo depth, and visualize speedup; verify notebook executes without errors
-- [ ] 11.3 Create `phases/phase09_distributed_inference/notebooks/03-scaling-analysis.ipynb` with cells that run distributed inference on graphs of increasing size (1M, 10M, 100M), measure throughput and memory, and extrapolate to 300M; verify notebook executes without errors
+- [ ] 11.1 Create `phases/phase09_distributed_inference/lessons/01-distributed-systems.md` following 5-part structure (Explain, Code, Visualize, Practice, Solution) covering distributed systems basics — why single-machine inference fails at scale, Spark architecture, executors vs driver; link Practice section to `exercises/01-distributed-systems.ipynb`; verify file exists and contains all 5 sections
+- [ ] 11.2 Create `phases/phase09_distributed_inference/lessons/02-graph-partitioning.md` following 5-part structure covering graph partitioning — METIS algorithm, spectral partitioning, partition quality metrics; link Practice section to `exercises/02-graph-partitioning.ipynb`; verify file exists and contains all 5 sections
+- [ ] 11.3 Create `phases/phase09_distributed_inference/lessons/03-halo-management.md` following 5-part structure covering halo management — what is a halo, how to compute k-hop neighbors, halo storage; link Practice section to `exercises/03-halo-management.ipynb`; verify file exists and contains all 5 sections
+- [ ] 11.4 Create `phases/phase09_distributed_inference/lessons/04-sampling-udf.md` following 5-part structure covering sampling UDF — mapPartitions, neighbor sampling on executor, PyG Data construction; link Practice section to `exercises/04-sampling-udf.ipynb`; verify file exists and contains all 5 sections
+- [ ] 11.5 Create `phases/phase09_distributed_inference/lessons/05-model-serving.md` following 5-part structure covering model serving — PyTorch serialization, Spark broadcast, executor model loading; link Practice section to `exercises/05-model-serving.ipynb`; verify file exists and contains all 5 sections
+- [ ] 11.6 Create `phases/phase09_distributed_inference/lessons/06-production-deployment.md` following 5-part structure covering production deployment — memory tuning, performance monitoring, scaling to 300M nodes; link Practice section to `exercises/06-production-deployment.ipynb`; verify file exists and contains all 5 sections
 
-## 12. End-to-end pipeline
+## 12. Educational content — notebooks
 
-- [ ] 12.1 Create `phases/phase09_distributed_inference/run_distributed_inference.py` that partitions graph, loads halos, runs distributed inference, benchmarks performance, and generates report; verify script runs without errors
-- [ ] 12.2 Print summary: partition stats, halo stats, inference throughput, speedup factor, stop decision; verify output is human-readable
-- [ ] 12.3 Implement stop decision check: if executor sampling does not achieve 2× speedup and 95% PR-AUC, print warning; verify warning is printed when conditions not met
-- [ ] 12.4 Save benchmark results to `outputs/distributed_benchmark.json`; verify file exists and is valid JSON
-- [ ] 12.5 Run full test suite `pytest phases/phase09_distributed_inference/tests/ -v` and verify all tests pass; verify exit code 0
-- [ ] 12.6 Run `phases/phase09_distributed_inference/run_distributed_inference.py` end-to-end with synthetic 1M-node graph and verify: graph partitioned, halos loaded, inference completed, benchmark generated, stop decision evaluated; confirm exit code 0
+- [ ] 12.1 Create `phases/phase09_distributed_inference/notebooks/01-distributed-inference-demo.ipynb` with cells that partition a graph, load halos, run sampling on executor, and collect predictions; verify notebook executes without errors
+- [ ] 12.2 Create `phases/phase09_distributed_inference/notebooks/02-performance-tuning.ipynb` with cells that benchmark driver vs executor sampling, tune partition size and halo depth, and visualize speedup; verify notebook executes without errors
+- [ ] 12.3 Create `phases/phase09_distributed_inference/notebooks/03-scaling-analysis.ipynb` with cells that run distributed inference on graphs of increasing size (1M, 10M, 100M), measure throughput and memory, and extrapolate to 300M; verify notebook executes without errors
+
+## 13. End-to-end pipeline
+
+- [ ] 13.1 Create `phases/phase09_distributed_inference/run_distributed_inference.py` that partitions graph, loads halos, runs distributed inference, benchmarks performance, and generates report; verify script runs without errors
+- [ ] 13.2 Print summary: partition stats, halo stats, inference throughput, speedup factor, stop decision; verify output is human-readable
+- [ ] 13.3 Implement stop decision check: if executor sampling does not achieve 2× speedup and 95% PR-AUC, print warning; verify warning is printed when conditions not met
+- [ ] 13.4 Save benchmark results to `outputs/distributed_benchmark.json`; verify file exists and is valid JSON
+- [ ] 13.5 Run full test suite `pytest phases/phase09_distributed_inference/tests/ -v` and verify all tests pass; verify exit code 0
+- [ ] 13.6 Run `phases/phase09_distributed_inference/run_distributed_inference.py` end-to-end with synthetic 1M-node graph and verify: graph partitioned, halos loaded, inference completed, benchmark generated, stop decision evaluated; confirm exit code 0

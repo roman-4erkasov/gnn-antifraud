@@ -31,9 +31,11 @@ Beyond code, we want to deliver this as a **learning experience**: mini-lessons 
 - Self-contained phase in `phases/phase01_lightgbm_baseline/`:
   - `pyproject.toml` and `uv.lock` with pinned dependencies
   - `src/phase01_lightgbm_baseline/`: lightgbm_baseline.py, graph_features.py, data_loader.py
+  - `run_lightgbm_baseline.py`: end-to-end run script (in-phase, consistent with phases 02–10)
   - `tests/`: test_lightgbm_baseline.py, test_graph_features.py, test_comparison.py
   - `lessons/`: markdown files with code, explanations, visualizations, exercises and solutions
   - `notebooks/`: interactive Jupyter notebooks for hands-on experimentation
+  - `exercises/`: interactive Jupyter notebooks for Practice sections (linked from lessons)
 - Uses existing utilities: `src/utils/calibration.py`, `src/utils/metrics.py`
 - Data stored in `data/ieee-cis/` (shared across phases); `data_loader.py` checks existence and downloads if missing
 - No breaking changes to existing codebase

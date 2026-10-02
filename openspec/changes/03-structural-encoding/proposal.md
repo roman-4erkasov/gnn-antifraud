@@ -35,6 +35,7 @@ Phase 2 (`minimal-gnn`) established whether a single-layer GCN adds value over L
   - `notebooks/`
     - `01-exploring-eigenvectors.ipynb`
     - `02-community-analysis.ipynb`
+  - `exercises/`: interactive Jupyter notebooks for Practice sections (linked from lessons)
 - Uses existing: `src/utils/metrics.py`, `phases/phase02_minimal_gnn/src/phase02_minimal_gnn/`
 - Dependency: numpy, scipy, community_louvain
 - No breaking changes

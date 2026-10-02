@@ -1,6 +1,6 @@
 ## Purpose
 
-Generate synthetic fraud patterns (Mitme, Cascade, Money Mule), train graph classifiers to detect them, and produce structured investigation templates with XAI validation of pattern-level detection quality.
+Generate synthetic fraud patterns (Mitme, Cascade, Money Mule), train graph classifiers to detect them, and produce structured investigation templates for pattern-level detection.
 
 ## ADDED Requirements
 
@@ -58,12 +58,12 @@ The system SHALL train graph classifiers (GCN and GAT) on each synthetic pattern
 #### Scenario: Train graph classifier on Cascade patterns
 
 - **WHEN** a GCN or GAT model is trained on Cascade synthetic data
-- **THEN** the system reports per-class Recall and Precision@K for the Cascade class, and verifies whether XAI correctly identifies the central hub node
+- **THEN** the system reports per-class Recall and Precision@K for the Cascade class
 
 #### Scenario: Train graph classifier on Money Mule patterns
 
 - **WHEN** a GCN or GAT model is trained on Money Mule synthetic data
-- **THEN** the system reports per-class Recall and Precision@K for the Money Mule class, and verifies whether PGExplainer or GNNExplainer can identify chain edges
+- **THEN** the system reports per-class Recall and Precision@K for the Money Mule class
 
 ### Requirement: Pattern template generation
 
@@ -84,17 +84,6 @@ The system SHALL produce investigation templates for detected fraud patterns in 
 - **WHEN** a Money Mule pattern is detected by a graph classifier
 - **THEN** the system outputs a template containing: pattern type ("Money Mule"), list of chain nodes and edges, structural signature (sequential chain path), confidence score, and recommended investigation actions
 
-### Requirement: XAI explanation quality comparison across patterns
-
-The system SHALL compare explanation quality of XAI methods across different pattern types to identify which patterns are easiest and hardest to explain.
-
-#### Scenario: Compare XAI quality across pattern types
-
-- **WHEN** XAI explanations (GNNExplainer, PGExplainer) are generated for detected pattern instances
-- **THEN** the system computes explanation quality metrics (precision/recall against ground-truth structural roles) for each pattern type and produces a summary ordering patterns from easiest to hardest to explain
-
-## ADDED Requirements
-
 ### Requirement: Pattern evaluation in LightGBM baseline
 
 The system SHALL report pattern-specific evaluation metrics (per-pattern Recall and Precision@K) when evaluating fraud detection models.
@@ -112,22 +101,3 @@ The system SHALL report pattern-specific detection quality when evaluating graph
 
 - **WHEN** GCN or GAT models are evaluated on synthetic pattern data
 - **THEN** the system reports per-pattern Recall and Precision@K for each fraud pattern type, enabling comparison across pattern types and models
-
-### Requirement: XAI validation on detected patterns
-
-The system SHALL validate XAI explanations on graph classifier-detected pattern instances, verifying that explanations identify correct structural roles.
-
-#### Scenario: Validate XAI on detected Mitme
-
-- **WHEN** GNNExplainer or PGExplainer explains a detected Mitme pattern instance
-- **THEN** the system measures whether highlighted edges correspond to the known colluding pairs (circular bidirectional transactions)
-
-#### Scenario: Validate XAI on detected Cascade
-
-- **WHEN** GNNExplainer explains a detected Cascade pattern instance
-- **THEN** the system measures whether highlighted nodes include the central hub node of the star topology
-
-#### Scenario: Validate XAI on detected Money Mule
-
-- **WHEN** PGExplainer or GNNExplainer explains a detected Money Mule pattern instance
-- **THEN** the system measures whether highlighted edges correspond to chain edges in the sequential money flow

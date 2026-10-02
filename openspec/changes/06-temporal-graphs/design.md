@@ -1,6 +1,6 @@
 ## Context
 
-Phases 1–6 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`, `xai-fraud`, `pattern-detection`, `04-xai-fraud`) have established: (a) LightGBM baselines with and without graph features, (b) GCN/GAT models with various structural encodings, (c) XAI methods (GNNExplainer, PGExplainer, GAT attention) with validation pipelines, (d) Synthetic pattern detection. All existing code in `phases/phase06_temporal_graphs/src/phase06_temporal_graphs/` is empty. The project has `src/utils/calibration.py` and `src/utils/metrics.py` available. IEEE-CIS has explicit timestamps. Pay-At-Pump, Sungkyunkwan, and Naver Plus Bank are temporal anomaly datasets designed specifically for temporal fraud detection.
+Phases 1–6 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`, `xai-basics`, `pattern-detection`, `xai-validation`) have established: (a) LightGBM baselines with and without graph features, (b) GCN/GAT models with various structural encodings, (c) XAI methods (GNNExplainer, PGExplainer, GAT attention) with validation pipelines, (d) Synthetic pattern detection. All existing code in `phases/phase06_temporal_graphs/src/phase06_temporal_graphs/` is empty. The project has `src/utils/calibration.py` and `src/utils/metrics.py` available. IEEE-CIS has explicit timestamps. Pay-At-Pump, Sungkyunkwan, and Naver Plus Bank are temporal anomaly datasets designed specifically for temporal fraud detection.
 
 ## Goals / Non-Goals
 
@@ -92,6 +92,17 @@ Phases 1–6 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`, `xai-fr
 - Each phase stores its own copy — wastes disk space
 - Centralized `src/data/` — violates phase isolation principle
 - Download on every run — slow, requires network, not reproducible
+
+### Decision 8: Interactive exercises with linked notebooks
+
+**Choice:** Each lesson's Practice section links to an interactive Jupyter notebook in `exercises/` directory.
+
+**Rationale:** Practice exercises in markdown are static text. Linking to notebooks allows users to open, run, and modify code directly. Minimal template: setup code, task description, empty code cell for user solution, solution in markdown code block.
+
+**Alternatives considered:**
+- All exercises in one notebook — harder to navigate, no clear mapping to lessons
+- Exercises embedded in lesson notebooks — mixes demonstration and practice
+- Practice only in markdown — requires copy-paste, less interactive
 
 ## Risks / Trade-offs
 

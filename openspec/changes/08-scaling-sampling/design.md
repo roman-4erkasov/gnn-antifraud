@@ -1,6 +1,6 @@
 ## Context
 
-Phases 1–7 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`, `xai-fraud`, `pattern-detection`, `temporal-graphs`, `cross-dataset`) have established model effectiveness on datasets ranging from tens of thousands to a few million nodes. However, the research has not addressed scalability. The project's end goal is a production system for a 300M-node fraud graph. Full-graph GNN training on such a graph is computationally infeasible — it requires sampling (Neighbor Sampling, GraphSAINT, GraphBolt) and partitioning (METIS/K-way). Without these, the research cannot validate whether GNN-based fraud detection is viable at scale.
+Phases 1–8 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`, `xai-basics`, `pattern-detection`, `xai-validation`, `temporal-graphs`, `cross-dataset`) have established model effectiveness on datasets ranging from tens of thousands to a few million nodes. However, the research has not addressed scalability. The project's end goal is a production system for a 300M-node fraud graph. Full-graph GNN training on such a graph is computationally infeasible — it requires sampling (Neighbor Sampling, GraphSAINT, GraphBolt) and partitioning (METIS/K-way). Without these, the research cannot validate whether GNN-based fraud detection is viable at scale.
 
 ## Goals / Non-Goals
 
@@ -83,9 +83,9 @@ Phases 1–7 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`, `xai-fr
 
 ### Decision 7: Data storage and loading
 
-**Choice:** Each phase implements its own `data_loader.py` that generates synthetic data of varying sizes (100K, 1M, 10M nodes) into the shared `data/` directory at project root.
+**Choice:** Each phase implements its own `data_loader.py` that generates synthetic data of varying sizes (100K, 1M, 10M nodes) into a dedicated subdirectory `data/synthetic-scaling/` at project root.
 
-**Rationale:** Phase 08 generates synthetic scaling datasets for benchmarking mini-batch training and sampling strategies. Self-contained data loading ensures each phase can independently generate and manage its datasets without external dependencies, while the shared `data/` directory provides a consistent location for all generated data.
+**Rationale:** Phase 08 generates synthetic scaling datasets for benchmarking mini-batch training and sampling strategies. Self-contained data loading ensures each phase can independently generate and manage its datasets without external dependencies. Using a dedicated subdirectory `data/synthetic-scaling/` avoids conflicts with other phases that generate synthetic data (e.g., Phase 05 uses `data/synthetic-patterns/`) while maintaining consistency with the project's data management convention.
 
 **Alternatives considered:**
 - Centralized data generation script — single point of failure, harder to maintain per-phase datasets.
@@ -105,6 +105,17 @@ Phases 1–7 (`lightgbm-baseline`, `minimal-gnn`, `structural-encoding`, `xai-fr
 - Direct modification of Phase 02/06 models — violates self-contained principle, creates tight coupling.
 - Interface/Protocol approach — requires Phase 02/06 to implement a specific interface, which still modifies them.
 - Inheritance — less flexible than composition, harder to combine multiple sampling strategies.
+
+### Decision 9: Interactive exercises with linked notebooks
+
+**Choice:** Each lesson's Practice section links to an interactive Jupyter notebook in `exercises/` directory.
+
+**Rationale:** Practice exercises in markdown are static text. Linking to notebooks allows users to open, run, and modify code directly. Minimal template: setup code, task description, empty code cell for user solution, solution in markdown code block.
+
+**Alternatives considered:**
+- All exercises in one notebook — harder to navigate, no clear mapping to lessons
+- Exercises embedded in lesson notebooks — mixes demonstration and practice
+- Practice only in markdown — requires copy-paste, less interactive
 
 ## Risks / Trade-offs
 

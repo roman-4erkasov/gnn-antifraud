@@ -85,6 +85,17 @@ Phase 09 implements custom distributed GNN inference on PySpark, but production-
 - Generate data inline in each benchmark script — duplication, inconsistent graphs
 - Use a shared data generation module across phases — couples phases, breaks self-containment
 
+### Decision 7: Interactive exercises with linked notebooks
+
+**Choice:** Each lesson's Practice section links to an interactive Jupyter notebook in `exercises/` directory.
+
+**Rationale:** Practice exercises in markdown are static text. Linking to notebooks allows users to open, run, and modify code directly. Minimal template: setup code, task description, empty code cell for user solution, solution in markdown code block.
+
+**Alternatives considered:**
+- All exercises in one notebook — harder to navigate, no clear mapping to lessons
+- Exercises embedded in lesson notebooks — mixes demonstration and practice
+- Practice only in markdown — requires copy-paste, less interactive
+
 ## Risks / Trade-offs
 
 | Risk | Mitigation |
