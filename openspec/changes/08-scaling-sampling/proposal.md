@@ -15,7 +15,7 @@ Phases 1–8 have established model effectiveness on datasets of varying sizes. 
 
 ### New Capabilities
 
-- `phase08_scaling_sampling`: Neighbor Sampling with configurable depth/fanout, GraphSAINT (vertex/edge/subgraph), GraphBolt integration, graph partitioning (METIS/K-way), scaling benchmark (speed/quality/memory)
+- `phase08-scaling-sampling`: Neighbor Sampling with configurable depth/fanout, GraphSAINT (vertex/edge/subgraph), GraphBolt integration, graph partitioning (METIS/K-way), scaling benchmark (speed/quality/memory)
 
 ### Modified Capabilities
 

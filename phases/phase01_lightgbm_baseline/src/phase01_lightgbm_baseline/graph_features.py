@@ -10,11 +10,14 @@ from scipy import sparse
 
 class GraphFeatureExtractor:
     """Extract graph-derived features from transaction data.
-    
+
     Builds a bipartite user-merchant graph and computes node-level features:
-    - Degree, clustering coefficient
-    - Community labels (Louvain)
-    - Random walk structural embeddings (RWSE)
+
+    - degree (the number of incident transaction edges, also exposed as
+      ``edge_count``), clustering coefficient, and degree centrality
+    - Louvain community labels
+    - RWSE: the diagonal of the k-step random-walk return probability matrix
+      for k = 1..K (a K-dimensional vector per node)
     """
 
     def __init__(
@@ -22,10 +25,12 @@ class GraphFeatureExtractor:
         user_col: str = "card1",
         merchant_col: str = "ProductCD",
         txn_col: str = "TransactionID",
+        rwse_dim: int = 8,
     ) -> None:
         self.user_col = user_col
         self.merchant_col = merchant_col
         self.txn_col = txn_col
+        self.rwse_dim = rwse_dim
 
     def build_bipartite_graph(
         self,
@@ -33,68 +38,49 @@ class GraphFeatureExtractor:
         user_col: Optional[str] = None,
         merchant_col: Optional[str] = None,
     ) -> nx.Graph:
-        """Build bipartite graph from transaction data.
-        
-        Args:
-            txn_df: Transaction DataFrame.
-            user_col: Column name for user identifier.
-            merchant_col: Column name for merchant identifier.
-            
-        Returns:
-            NetworkX bipartite graph with users and merchants as nodes.
-        """
+        """Build a bipartite user-merchant graph from transaction data."""
         user_col = user_col or self.user_col
         merchant_col = merchant_col or self.merchant_col
-        
-        G = nx.Graph()
-        
-        # Add user and merchant nodes with type attribute
-        users = txn_df[user_col].unique()
-        merchants = txn_df[merchant_col].unique()
-        
-        G.add_nodes_from(users, bipartite=0, node_type="user")
-        G.add_nodes_from(merchants, bipartite=1, node_type="merchant")
-        
-        # Add edges for each transaction
-        for _, row in txn_df.iterrows():
-            user = row[user_col]
-            merchant = row[merchant_col]
-            if G.has_edge(user, merchant):
-                G[user][merchant]["weight"] += 1
+
+        graph = nx.Graph()
+
+        users = txn_df[user_col].dropna().unique()
+        merchants = txn_df[merchant_col].dropna().unique()
+        graph.add_nodes_from(users, bipartite=0, node_type="user")
+        graph.add_nodes_from(merchants, bipartite=1, node_type="merchant")
+
+        for user, merchant in zip(txn_df[user_col], txn_df[merchant_col]):
+            if pd.isna(user) or pd.isna(merchant):
+                continue
+            if graph.has_edge(user, merchant):
+                graph[user][merchant]["weight"] += 1
             else:
-                G.add_edge(user, merchant, weight=1)
-        
-        return G
+                graph.add_edge(user, merchant, weight=1)
+
+        return graph
 
     def compute_node_features(self, graph: nx.Graph) -> Dict:
-        """Compute per-node features from graph.
-        
-        Args:
-            graph: NetworkX graph.
-            
-        Returns:
-            Dictionary mapping node_id -> feature_dict with keys:
-            - degree: node degree
-            - clustering_coefficient: local clustering coefficient
-            - node_type: "user" or "merchant"
-            - degree_centrality: normalized degree centrality
+        """Compute per-node features.
+
+        Returns a mapping ``node -> feature dict`` with keys ``degree``,
+        ``edge_count`` (equal to degree), ``clustering_coefficient``,
+        ``node_type``, and ``degree_centrality``.
         """
-        features = {}
-        
-        # Compute graph-level metrics
+        features: Dict = {}
         degrees = dict(graph.degree())
         clustering = nx.clustering(graph)
         centrality = nx.degree_centrality(graph)
-        
+
         for node in graph.nodes():
-            node_type = graph.nodes[node].get("node_type", "unknown")
+            degree = degrees[node]
             features[node] = {
-                "degree": degrees[node],
+                "degree": degree,
+                "edge_count": degree,
                 "clustering_coefficient": clustering[node],
-                "node_type": node_type,
+                "node_type": graph.nodes[node].get("node_type", "unknown"),
                 "degree_centrality": centrality[node],
             }
-        
+
         return features
 
     def detect_communities(
@@ -102,115 +88,68 @@ class GraphFeatureExtractor:
         graph: nx.Graph,
         node_type: str = "user",
     ) -> Dict:
-        """Run Louvain community detection on graph.
-        
-        Args:
-            graph: NetworkX graph.
-            node_type: Filter to only return communities for this node type.
-            
-        Returns:
-            Dictionary mapping node_id -> community_label (integer).
-        """
-        import community
-        
-        # Run Louvain on the full graph
-        partition = community.best_partition(graph)
-        
-        # Filter by node type if specified
+        """Run Louvain community detection and return ``node -> label``."""
+        import community as community_louvain
+
+        partition = community_louvain.best_partition(graph)
+
         if node_type:
             partition = {
                 node: label
                 for node, label in partition.items()
                 if graph.nodes[node].get("node_type") == node_type
             }
-        
+
         return partition
 
     def compute_rwse_features(
         self,
         graph: nx.Graph,
-        n_walks: int = 10,
-        walk_length: int = 8,
+        k_max: Optional[int] = None,
     ) -> Dict:
-        """Compute random walk structural embeddings.
-        
+        """Compute RWSE = diagonal of k-step random-walk return probabilities.
+
+        For the row-stochastic transition matrix ``P = D^-1 A`` the value for
+        node ``i`` at step ``k`` is ``(P^k)[i, i]``. Returns a mapping
+        ``node -> np.ndarray`` of shape ``(k_max,)``.
+
         Args:
             graph: NetworkX graph.
-            n_walks: Number of random walks per node.
-            walk_length: Length of each random walk.
-            
-        Returns:
-            Dictionary mapping node_id -> RWSE features (numpy array).
+            k_max: Number of walk steps (defaults to ``self.rwse_dim``).
         """
-        rwse_features = {}
+        k_max = k_max or self.rwse_dim
         nodes = list(graph.nodes())
-        
-        for node in nodes:
-            walk_stats = []
-            
-            for _ in range(n_walks):
-                walk = [node]
-                current = node
-                
-                for _ in range(walk_length):
-                    neighbors = list(graph.neighbors(current))
-                    if neighbors:
-                        current = np.random.choice(neighbors)
-                        walk.append(current)
-                    else:
-                        break
-                
-                # Compute statistics from this walk
-                walk_stats.append({
-                    "length": len(walk),
-                    "unique_nodes": len(set(walk)),
-                    "mean_degree": np.mean([graph.degree(n) for n in walk]),
-                })
-            
-            # Aggregate walk statistics
-            avg_length = np.mean([s["length"] for s in walk_stats])
-            avg_unique = np.mean([s["unique_nodes"] for s in walk_stats])
-            avg_degree = np.mean([s["mean_degree"] for s in walk_stats])
-            
-            rwse_features[node] = np.array([avg_length, avg_unique, avg_degree])
-        
-        return rwse_features
+        n = len(nodes)
+        if n == 0:
+            return {}
 
-    def append_graph_features(
-        self,
-        train_df: pd.DataFrame,
-        test_df: pd.DataFrame,
-        user_col: Optional[str] = None,
-        merchant_col: Optional[str] = None,
-    ) -> Tuple[pd.DataFrame, pd.DataFrame]:
-        """Append graph-derived features to transaction DataFrames.
-        
-        Args:
-            train_df: Training DataFrame.
-            test_df: Test DataFrame.
-            user_col: Column name for user identifier.
-            merchant_col: Column name for merchant identifier.
-            
-        Returns:
-            Tuple of (train_df, test_df) with graph features appended.
+        adjacency = nx.to_scipy_sparse_array(
+            graph, nodelist=nodes, weight=None, dtype=float, format="csr"
+        )
+        degree = np.asarray(adjacency.sum(axis=1)).ravel()
+        degree[degree == 0] = 1.0
+        transition = (sparse.diags(1.0 / degree) @ adjacency).tocsr()
+
+        out = np.zeros((n, k_max), dtype=float)
+        power = transition.copy()
+        for k in range(k_max):
+            out[:, k] = power.diagonal()
+            power = power @ transition
+
+        return {node: out[i] for i, node in enumerate(nodes)}
+
+    def compute_feature_table(self, graph: nx.Graph) -> pd.DataFrame:
+        """Combine all node features into a single per-node table.
+
+        Columns: ``node_id``, ``node_type``, ``degree``,
+        ``clustering_coefficient``, ``degree_centrality``,
+        ``community_label``, and ``rwse_1`` .. ``rwse_{rwse_dim}``.
         """
-        user_col = user_col or self.user_col
-        merchant_col = merchant_col or self.merchant_col
-        
-        # Build graph from training data
-        graph = self.build_bipartite_graph(train_df, user_col, merchant_col)
-        
-        # Compute node features
         node_features = self.compute_node_features(graph)
-        
-        # Detect communities
         communities = self.detect_communities(graph, node_type="user")
-        
-        # Compute RWSE features
-        rwse_features = self.compute_rwse_features(graph)
-        
-        # Create feature DataFrames
-        feature_rows = []
+        rwse = self.compute_rwse_features(graph)
+
+        rows: List[Dict] = []
         for node, feats in node_features.items():
             row = {
                 "node_id": node,
@@ -218,95 +157,78 @@ class GraphFeatureExtractor:
                 "degree": feats["degree"],
                 "clustering_coefficient": feats["clustering_coefficient"],
                 "degree_centrality": feats["degree_centrality"],
+                "community_label": (
+                    communities.get(node, -1)
+                    if feats["node_type"] == "user"
+                    else -1
+                ),
             }
-            
-            # Add RWSE features
-            rwse = rwse_features.get(node, np.zeros(3))
-            row["rwse_avg_length"] = rwse[0]
-            row["rwse_avg_unique"] = rwse[1]
-            row["rwse_avg_degree"] = rwse[2]
-            
-            # Add community label for users
-            if feats["node_type"] == "user":
-                row["community_label"] = communities.get(node, -1)
-            
-            feature_rows.append(row)
-        
-        feature_df = pd.DataFrame(feature_rows)
-        
-        # Split by node type
-        user_features = feature_df[feature_df["node_type"] == "user"].copy()
-        merchant_features = feature_df[feature_df["node_type"] == "merchant"].copy()
-        
-        # Rename columns for joining
-        user_features = user_features.rename(columns={
-            "node_id": user_col,
-            "degree": "user_degree",
-            "clustering_coefficient": "user_clustering",
-            "degree_centrality": "user_degree_centrality",
-            "community_label": "user_community",
-            "rwse_avg_length": "user_rwse_length",
-            "rwse_avg_unique": "user_rwse_unique",
-            "rwse_avg_degree": "user_rwse_degree",
-        })
-        
-        merchant_features = merchant_features.rename(columns={
+            vector = rwse.get(node, np.zeros(self.rwse_dim))
+            for i, value in enumerate(vector, start=1):
+                row[f"rwse_{i}"] = float(value)
+            rows.append(row)
+
+        return pd.DataFrame(rows)
+
+    @staticmethod
+    def _base_feature_columns(graph_features: pd.DataFrame) -> List[str]:
+        return [c for c in graph_features.columns if c not in ("node_id", "node_type")]
+
+    def graph_feature_columns(self, graph_features: pd.DataFrame) -> List[str]:
+        """Return the joined (prefixed) graph feature column names."""
+        columns: List[str] = []
+        for base in self._base_feature_columns(graph_features):
+            columns.append(f"user_{base}")
+            columns.append(f"merchant_{base}")
+        return columns
+
+    def append_graph_features(
+        self,
+        X_train: pd.DataFrame,
+        X_test: pd.DataFrame,
+        graph_features: pd.DataFrame,
+    ) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        """Join a node-feature table onto transaction DataFrames.
+
+        Args:
+            X_train: Training transactions.
+            X_test: Test transactions.
+            graph_features: Node-feature table from :meth:`compute_feature_table`.
+
+        Returns:
+            ``(X_train, X_test)`` with ``user_*`` and ``merchant_*`` columns.
+        """
+        user_col = self.user_col
+        merchant_col = self.merchant_col
+        base_cols = self._base_feature_columns(graph_features)
+
+        user_features = graph_features[graph_features["node_type"] == "user"].copy()
+        merchant_features = graph_features[
+            graph_features["node_type"] == "merchant"
+        ].copy()
+
+        user_rename = {"node_id": user_col, **{c: f"user_{c}" for c in base_cols}}
+        merchant_rename = {
             "node_id": merchant_col,
-            "degree": "merchant_degree",
-            "clustering_coefficient": "merchant_clustering",
-            "degree_centrality": "merchant_degree_centrality",
-            "rwse_avg_length": "merchant_rwse_length",
-            "rwse_avg_unique": "merchant_rwse_unique",
-            "rwse_avg_degree": "merchant_rwse_degree",
-        })
-        
-        # Join features to train and test DataFrames
-        train_df = train_df.merge(
-            user_features[[user_col, "user_degree", "user_clustering", 
-                          "user_degree_centrality", "user_community",
-                          "user_rwse_length", "user_rwse_unique", "user_rwse_degree"]],
-            on=user_col,
-            how="left",
-        )
-        
-        train_df = train_df.merge(
-            merchant_features[[merchant_col, "merchant_degree", "merchant_clustering",
-                              "merchant_degree_centrality",
-                              "merchant_rwse_length", "merchant_rwse_unique", 
-                              "merchant_rwse_degree"]],
-            on=merchant_col,
-            how="left",
-        )
-        
-        test_df = test_df.merge(
-            user_features[[user_col, "user_degree", "user_clustering",
-                          "user_degree_centrality", "user_community",
-                          "user_rwse_length", "user_rwse_unique", "user_rwse_degree"]],
-            on=user_col,
-            how="left",
-        )
-        
-        test_df = test_df.merge(
-            merchant_features[[merchant_col, "merchant_degree", "merchant_clustering",
-                              "merchant_degree_centrality",
-                              "merchant_rwse_length", "merchant_rwse_unique",
-                              "merchant_rwse_degree"]],
-            on=merchant_col,
-            how="left",
-        )
-        
-        # Fill NaN values with 0
-        graph_feature_cols = [
-            "user_degree", "user_clustering", "user_degree_centrality", "user_community",
-            "user_rwse_length", "user_rwse_unique", "user_rwse_degree",
-            "merchant_degree", "merchant_clustering", "merchant_degree_centrality",
-            "merchant_rwse_length", "merchant_rwse_unique", "merchant_rwse_degree",
+            **{c: f"merchant_{c}" for c in base_cols},
+        }
+        user_features = user_features.rename(columns=user_rename)
+        merchant_features = merchant_features.rename(columns=merchant_rename)
+
+        user_cols = [user_col] + [f"user_{c}" for c in base_cols]
+        merchant_cols = [merchant_col] + [f"merchant_{c}" for c in base_cols]
+
+        graph_feature_cols = [f"user_{c}" for c in base_cols] + [
+            f"merchant_{c}" for c in base_cols
         ]
-        
-        for col in graph_feature_cols:
-            if col in train_df.columns:
-                train_df[col] = train_df[col].fillna(0)
-            if col in test_df.columns:
-                test_df[col] = test_df[col].fillna(0)
-        
-        return train_df, test_df
+
+        def _join(df: pd.DataFrame) -> pd.DataFrame:
+            joined = df.merge(
+                user_features[user_cols], on=user_col, how="left"
+            ).merge(merchant_features[merchant_cols], on=merchant_col, how="left")
+            for col in graph_feature_cols:
+                if col in joined.columns:
+                    joined[col] = joined[col].fillna(0)
+            return joined
+
+        return _join(X_train), _join(X_test)

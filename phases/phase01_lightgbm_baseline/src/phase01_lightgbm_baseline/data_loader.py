@@ -1,177 +1,138 @@
-"""Data loading utilities for IEEE-CIS fraud detection dataset."""
+"""Data loading utilities for the IEEE-CIS fraud detection dataset."""
 
-import os
-import urllib.request
-import zipfile
+import subprocess
+import sys
 from pathlib import Path
-from typing import Tuple
+from typing import List, Optional, Tuple
 
 import pandas as pd
 
+# Make the shared ``src.utils`` package importable when running from anywhere.
+_project_root = Path(__file__).resolve().parents[4]
+if str(_project_root) not in sys.path:
+    sys.path.insert(0, str(_project_root))
+
+from src.utils.features import prepare_baseline_features  # noqa: E402
+
+
+REQUIRED_FILES: List[str] = [
+    "train_transaction.csv",
+    "test_transaction.csv",
+    "train_identity.csv",
+    "test_identity.csv",
+]
+
 
 class DataLoader:
-    """Load IEEE-CIS fraud detection dataset.
-    
-    Checks if data exists in shared data/ directory and downloads if missing.
+    """Load the IEEE-CIS dataset from the shared data directory.
+
+    The loader never fabricates data: it validates that the required CSVs are
+    present and, when they are not, prints instructions for obtaining them.
     """
 
     def __init__(self, data_dir: str = "data") -> None:
         self.data_dir = Path(data_dir)
-        self.ieee_cis_dir = self.data_dir / "ieee-cis"
+        self.ieee_cis_dir = self._resolve_dir()
+
+    def _resolve_dir(self) -> Path:
+        """Resolve the directory holding the CSVs.
+
+        Accepts either a directory that directly contains the four CSV files
+        (e.g. a test fixture) or a parent directory with an ``ieee-cis/``
+        subdirectory (the shared ``data/`` layout).
+        """
+        if all((self.data_dir / f).exists() for f in REQUIRED_FILES):
+            return self.data_dir
+        return self.data_dir / "ieee-cis"
 
     def check_data_exists(self) -> bool:
-        """Check if IEEE-CIS data exists in data/ieee-cis/ directory.
-        
-        Returns:
-            True if data directory exists and contains required files.
-        """
+        """Return True if every required IEEE-CIS CSV is present."""
+        self.ieee_cis_dir = self._resolve_dir()
         if not self.ieee_cis_dir.exists():
             return False
-        
-        required_files = [
-            "train_transaction.csv",
-            "test_transaction.csv",
-            "train_identity.csv",
-            "test_identity.csv",
-        ]
-        
-        return all((self.ieee_cis_dir / f).exists() for f in required_files)
+        return all((self.ieee_cis_dir / f).exists() for f in REQUIRED_FILES)
 
     def download_data(self) -> None:
-        """Download IEEE-CIS dataset or extract from archive.
-        
-        Creates data/ieee-cis/ directory structure with transaction and identity files.
-        For now, creates synthetic data for testing purposes.
+        """Validate the dataset and raise with download instructions if missing.
+
+        IEEE-CIS is distributed on Kaggle and requires accepting its terms, so
+        it cannot be downloaded automatically. This method reports what is
+        present/missing and how to obtain the data.
         """
+        self.ieee_cis_dir = self._resolve_dir()
         self.ieee_cis_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Create synthetic data for testing
-        # In production, this would download from Kaggle or extract from archive
-        self._create_synthetic_data()
 
-    def _create_synthetic_data(self) -> None:
-        """Create synthetic IEEE-CIS-like data for testing."""
-        import numpy as np
-        
-        np.random.seed(42)
-        n_train = 1000
-        n_test = 200
-        
-        # Transaction data
-        train_txn = pd.DataFrame({
-            "TransactionID": range(n_train),
-            "TransactionAmt": np.random.exponential(100, n_train),
-            "TransactionDT": np.arange(n_train),
-            "ProductCD": np.random.choice(["W", "H", "C", "S", "R"], n_train),
-            "card1": np.random.randint(1000, 20000, n_train),
-            "card2": np.random.choice([100, 200, 300, 400, 500], n_train),
-            "addr1": np.random.randint(100, 500, n_train),
-            "addr2": np.random.choice([10, 20, 30, 40, 50], n_train),
-            "dist1": np.random.exponential(10, n_train),
-            "dist2": np.random.exponential(5, n_train),
-            "isFraud": np.random.binomial(1, 0.035, n_train),  # ~3.5% fraud rate
-        })
-        
-        test_txn = pd.DataFrame({
-            "TransactionID": range(n_train, n_train + n_test),
-            "TransactionAmt": np.random.exponential(100, n_test),
-            "TransactionDT": np.arange(n_test),
-            "ProductCD": np.random.choice(["W", "H", "C", "S", "R"], n_test),
-            "card1": np.random.randint(1000, 20000, n_test),
-            "card2": np.random.choice([100, 200, 300, 400, 500], n_test),
-            "addr1": np.random.randint(100, 500, n_test),
-            "addr2": np.random.choice([10, 20, 30, 40, 50], n_test),
-            "dist1": np.random.exponential(10, n_test),
-            "dist2": np.random.exponential(5, n_test),
-            "isFraud": np.random.binomial(1, 0.035, n_test),
-        })
-        
-        # Identity data
-        train_id = pd.DataFrame({
-            "TransactionID": range(n_train),
-            "id_01": np.random.uniform(-5, 0, n_train),
-            "id_02": np.random.uniform(100, 500, n_train),
-            "DeviceType": np.random.choice(["macintosh", "windows", "android"], n_train),
-            "DeviceInfo": np.random.choice(["windows", "ios", "android", "linux"], n_train),
-        })
-        
-        test_id = pd.DataFrame({
-            "TransactionID": range(n_train, n_train + n_test),
-            "id_01": np.random.uniform(-5, 0, n_test),
-            "id_02": np.random.uniform(100, 500, n_test),
-            "DeviceType": np.random.choice(["macintosh", "windows", "android"], n_test),
-            "DeviceInfo": np.random.choice(["windows", "ios", "android", "linux"], n_test),
-        })
-        
-        # Save to CSV
-        train_txn.to_csv(self.ieee_cis_dir / "train_transaction.csv", index=False)
-        test_txn.to_csv(self.ieee_cis_dir / "test_transaction.csv", index=False)
-        train_id.to_csv(self.ieee_cis_dir / "train_identity.csv", index=False)
-        test_id.to_csv(self.ieee_cis_dir / "test_identity.csv", index=False)
+        present = [f for f in REQUIRED_FILES if (self.ieee_cis_dir / f).exists()]
+        missing = [f for f in REQUIRED_FILES if f not in present]
 
-    def load_data(self, sample_limit: int = None) -> Tuple[pd.DataFrame, pd.DataFrame]:
-        """Load IEEE-CIS transaction and identity data into DataFrames.
-        
+        print(f"IEEE-CIS data directory: {self.ieee_cis_dir}")
+        print(f"  present: {present or 'none'}")
+        print(f"  missing: {missing or 'none'}")
+
+        if not missing:
+            return
+
+        print()
+        print("To obtain the IEEE-CIS Fraud Detection dataset:")
+        print("  1. Accept the competition rules at https://www.kaggle.com/c/ieee-fraud-detection/data")
+        print("  2. Download ieee-fraud-detection.zip (Kaggle CLI: `kaggle competitions download -c ieee-fraud-detection`)")
+        print(f"  3. Unzip the four CSVs into: {self.ieee_cis_dir}")
+        raise FileNotFoundError(
+            f"Missing IEEE-CIS files in {self.ieee_cis_dir}: {missing}"
+        )
+
+    def load_data(
+        self,
+        sample_limit: Optional[int] = None,
+        random_state: int = 42,
+    ) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        """Load train/test DataFrames with baseline features prepared.
+
         Args:
-            sample_limit: If provided, limit to this many samples (for testing).
-            
+            sample_limit: If provided, take a stratified subsample of this size.
+            random_state: Seed used for the stratified subsample.
+
         Returns:
-            Tuple of (train_df, test_df) with baseline features prepared.
+            Tuple of ``(train_df, test_df)``.
         """
         if not self.check_data_exists():
             self.download_data()
-        
-        # Load transaction data
+
         train_txn = pd.read_csv(self.ieee_cis_dir / "train_transaction.csv")
         test_txn = pd.read_csv(self.ieee_cis_dir / "test_transaction.csv")
-        
-        # Load identity data
         train_id = pd.read_csv(self.ieee_cis_dir / "train_identity.csv")
         test_id = pd.read_csv(self.ieee_cis_dir / "test_identity.csv")
-        
-        # Merge transaction and identity data
+
         train_df = train_txn.merge(train_id, on="TransactionID", how="left")
         test_df = test_txn.merge(test_id, on="TransactionID", how="left")
-        
-        # Apply baseline feature preparation
-        train_df = self._prepare_baseline_features(train_df)
-        test_df = self._prepare_baseline_features(test_df)
-        
-        # Apply sample limit if specified
-        if sample_limit is not None:
-            train_df = train_df.head(sample_limit)
-            test_df = test_df.head(sample_limit)
-        
-        return train_df, test_df
 
-    def _prepare_baseline_features(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Prepare 3-feature baseline from raw transaction data.
-        
-        Features:
-        1. TransactionAmt - transaction amount
-        2. TransactionDT - time since account creation (normalized)
-        3. n_prior_transactions - number of prior transactions by card
-        
-        Args:
-            df: Transaction DataFrame.
-            
-        Returns:
-            DataFrame with baseline features added.
-        """
-        # Feature 1: Transaction amount (already present)
-        # df["TransactionAmt"] exists
-        
-        # Feature 2: Time since account creation (use TransactionDT as proxy)
-        # Normalize to [0, 1] range
-        dt_min = df["TransactionDT"].min()
-        dt_max = df["TransactionDT"].max()
-        if dt_max > dt_min:
-            df["time_since_creation"] = (df["TransactionDT"] - dt_min) / (dt_max - dt_min)
-        else:
-            df["time_since_creation"] = 0.0
-        
-        # Feature 3: Number of prior transactions by card1
-        # Count occurrences of each card1 value up to current row
-        df["n_prior_transactions"] = df.groupby("card1").cumcount()
-        
-        return df
+        train_df = prepare_baseline_features(train_df)
+        test_df = prepare_baseline_features(test_df)
+
+        if sample_limit is not None:
+            train_df = self._stratified_sample(train_df, sample_limit, random_state)
+            test_df = self._stratified_sample(test_df, sample_limit, random_state)
+
+        return train_df.reset_index(drop=True), test_df.reset_index(drop=True)
+
+    @staticmethod
+    def _stratified_sample(
+        df: pd.DataFrame,
+        n: int,
+        random_state: int = 42,
+        label_col: str = "isFraud",
+    ) -> pd.DataFrame:
+        """Return a stratified subsample of at most ``n`` rows."""
+        if n is None or n >= len(df):
+            return df
+        if label_col not in df.columns or df[label_col].nunique() < 2:
+            return df.sample(n=n, random_state=random_state).reset_index(drop=True)
+
+        frac = n / len(df)
+        parts = []
+        for _, group in df.groupby(label_col):
+            take = max(1, int(round(frac * len(group))))
+            take = min(take, len(group))
+            parts.append(group.sample(n=take, random_state=random_state))
+        sampled = pd.concat(parts)
+        return sampled.sample(frac=1.0, random_state=random_state).reset_index(drop=True)

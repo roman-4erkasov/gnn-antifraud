@@ -16,12 +16,12 @@ This is the final validation step — if XAI cannot identify known patterns, its
 
 ### New Capabilities
 
-- `phase05b_xai_validation`: XAI validation against synthetic fraud patterns, precision/recall metrics for explanation quality, cross-pattern XAI performance comparison
+- `phase05b-xai-validation`: XAI validation against synthetic fraud patterns, precision/recall metrics for explanation quality, cross-pattern XAI performance comparison
 
 ### Modified Capabilities
 
-- `phase04a_xai_basics`: Adds synthetic pattern validation to XAI pipeline (extends chargeback validation)
-- `phase05_pattern_detection`: XAI quality becomes an evaluation criterion for pattern detection
+- `phase04a-xai-basics`: Adds synthetic pattern validation to XAI pipeline (extends chargeback validation)
+- `phase05-pattern-detection`: XAI quality becomes an evaluation criterion for pattern detection
 
 ## Impact
 

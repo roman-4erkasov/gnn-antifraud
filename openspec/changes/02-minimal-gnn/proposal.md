@@ -15,11 +15,11 @@ Phase 1 of the fraud research established LightGBM baselines (minimal 3-feature 
 
 ### New Capabilities
 
-- `phase02_minimal_gnn`: Single-layer GCN classifier for fraud detection, calibration, and comparison against LightGBM baselines
+- `phase02-minimal-gnn`: Single-layer GCN classifier for fraud detection, calibration, and comparison against LightGBM baselines
 
 ### Modified Capabilities
 
-- `phase01_lightgbm_baseline`: Adds GCN as a new model type in the comparison pipeline
+- `phase01-lightgbm-baseline`: Adds GCN as a new model type in the comparison pipeline
 
 ## Impact
 

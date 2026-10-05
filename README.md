@@ -17,7 +17,8 @@ gnn-antifraud/
 │   ├── phase07_cross_dataset/       # Cross-dataset evaluation
 │   ├── phase08_scaling_sampling/    # Scaling & sampling
 │   ├── phase09_distributed_inference/ # Distributed inference (PySpark)
-│   └── phase10_distributed_gnn_frameworks/ # Framework comparison
+│   ├── phase10_distributed_gnn_frameworks/ # Framework comparison
+│   └── phase11_temporal_link_prediction/ # Temporal link prediction
 ├── data/                            # Общие датасеты (создаётся при загрузке)
 ├── src/utils/                       # Общие утилиты
 │   ├── calibration.py               # Калибровка вероятностей
@@ -83,6 +84,11 @@ gnn-antifraud/
 **Описание:** Сравнение DGL Distributed, AliGraph, Quiver.  
 **Результат:** Benchmark suite, рекомендации, 5 уроков, 2 ноутбука.
 
+### Phase 11: Temporal Link Prediction
+**Зависимости:** нет (self-contained; использует только общие `src/utils/` и `data/`)  
+**Описание:** Ранжирование новых связей в пределах горизонта прогноза `H`. Общий интерфейс датасетов (synthetic, sx-mathoverflow, tgbl-coin), GNN-эмбеддинги без утечки, pluggable retrieval (embedding/structural/I2I/sequential), целевой CatBoost listwise-ранкер.  
+**Результат:** Link-prediction pipeline, 7 уроков, 3 ноутбука.
+
 ## Граф выполнения
 
 ```
@@ -104,6 +110,8 @@ Phase 05b (XAI Validation)    ↓
                                Phase 09 (Distributed Inference)
                                     ↓
                                Phase 10 (Framework Comparison)
+
+Phase 11 (Temporal Link Prediction) — self-contained, независима от фаз 01-10
 ```
 
 ## Начало работы

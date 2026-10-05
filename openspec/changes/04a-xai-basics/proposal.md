@@ -16,12 +16,12 @@ Phase 3 (`structural-encoding`) established which structural encoding maximizes 
 
 ### New Capabilities
 
-- `phase04a_xai_basics`: GNNExplainer node-level explanation, PGExplainer edge-level explanation, GAT attention weight extraction, explanation validation against chargeback ground truth, investigation lead generation, cross-method explanation comparison
+- `phase04a-xai-basics`: GNNExplainer node-level explanation, PGExplainer edge-level explanation, GAT attention weight extraction, explanation validation against chargeback ground truth, investigation lead generation, cross-method explanation comparison
 
 ### Modified Capabilities
 
-- `phase02_minimal_gnn`: Adds XAI output (GNNExplainer masks, PGExplainer scores) to GCN prediction pipeline
-- `phase03_structural_encoding`: Adds explanation validation as an evaluation criterion for structural encodings
+- `phase02-minimal-gnn`: Adds XAI output (GNNExplainer masks, PGExplainer scores) to GCN prediction pipeline
+- `phase03-structural-encoding`: Adds explanation validation as an evaluation criterion for structural encodings
 
 ## Impact
 

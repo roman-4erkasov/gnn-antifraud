@@ -14,7 +14,7 @@ Phases 1–7 have established baselines (LightGBM, GCN, GAT), temporal models (T
 
 ### New Capabilities
 
-- `phase07_cross_dataset`: Cross-dataset model comparison, bootstrapping-based confidence intervals, significance testing, transfer learning evaluation, cross-dataset feature compatibility analysis
+- `phase07-cross-dataset`: Cross-dataset model comparison, bootstrapping-based confidence intervals, significance testing, transfer learning evaluation, cross-dataset feature compatibility analysis
 
 ### Modified Capabilities
 

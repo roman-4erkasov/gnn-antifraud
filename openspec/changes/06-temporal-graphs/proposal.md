@@ -16,13 +16,13 @@ Phases 1–6 demonstrated fraud detection on static graph representations. Howev
 
 ### New Capabilities
 
-- `phase06_temporal_graphs`: TGN with node memory, GRN with snapshot sequence processing, rolling-window GCN, temporal leakage detection, temporal dataset loaders (Pay-At-Pump, Sungkyunkwan, Naver Plus Bank), and temporal model comparison
+- `phase06-temporal-graphs`: TGN with node memory, GRN with snapshot sequence processing, rolling-window GCN, temporal leakage detection, temporal dataset loaders (Pay-At-Pump, Sungkyunkwan, Naver Plus Bank), and temporal model comparison
 
 ### Modified Capabilities
 
-- `phase02_minimal_gnn`: Adds temporal evaluation — static GCN now evaluated on temporal snapshots as an additional comparison point
-- `phase01_lightgbm_baseline`: Adds temporal-aware baseline (features computed within rolling windows)
-- `phase05b_xai_validation`: Adds temporal dimension to explanation validation (XAI on time-stamped predictions)
+- `phase02-minimal-gnn`: Adds temporal evaluation — static GCN now evaluated on temporal snapshots as an additional comparison point
+- `phase01-lightgbm-baseline`: Adds temporal-aware baseline (features computed within rolling windows)
+- `phase05b-xai-validation`: Adds temporal dimension to explanation validation (XAI on time-stamped predictions)
 
 ## Impact
 

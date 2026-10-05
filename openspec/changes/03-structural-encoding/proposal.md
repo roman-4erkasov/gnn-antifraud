@@ -14,11 +14,11 @@ Phase 2 (`minimal-gnn`) established whether a single-layer GCN adds value over L
 
 ### New Capabilities
 
-- `phase03_structural_encoding`: Multiple structural encoding techniques (ReCWE, RWSE, Spectral, Community) for GNN node classification, SHAP-based feature importance comparison
+- `phase03-structural-encoding`: Multiple structural encoding techniques (ReCWE, RWSE, Spectral, Community) for GNN node classification, SHAP-based feature importance comparison
 
 ### Modified Capabilities
 
-- `phase02_minimal_gnn`: Adds structural encoding as an option to GCN training pipeline
+- `phase02-minimal-gnn`: Adds structural encoding as an option to GCN training pipeline
 
 ## Impact
 

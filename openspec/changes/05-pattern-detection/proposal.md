@@ -14,13 +14,13 @@ Phase 04a (`xai-basics`) produced validated XAI explanations for fraud predictio
 
 ### New Capabilities
 
-- `phase05_pattern_detection`: Synthetic fraud pattern generation (Mitme, Cascade, Money Mule), graph-based pattern classification (GCN/GAT), and pattern template generation
+- `phase05-pattern-detection`: Synthetic fraud pattern generation (Mitme, Cascade, Money Mule), graph-based pattern classification (GCN/GAT), and pattern template generation
 
 ### Modified Capabilities
 
-- `phase01_lightgbm_baseline`: Adds pattern-specific evaluation metrics (pattern-level Recall, Precision@K per pattern type)
-- `phase02_minimal_gnn`: Adds pattern-level evaluation on synthetic data (detection quality per pattern type)
-- `phase03_structural_encoding`: Adds pattern-specific evaluation to structural encoding experiments
+- `phase01-lightgbm-baseline`: Adds pattern-specific evaluation metrics (pattern-level Recall, Precision@K per pattern type)
+- `phase02-minimal-gnn`: Adds pattern-level evaluation on synthetic data (detection quality per pattern type)
+- `phase03-structural-encoding`: Adds pattern-specific evaluation to structural encoding experiments
 
 ## Impact
 
