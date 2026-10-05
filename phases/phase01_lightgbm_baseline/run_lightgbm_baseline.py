@@ -14,9 +14,13 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
-# Add this phase's ``src`` to the path so the package imports without install.
+# Add this phase's ``src`` and the project root to the path so the package and
+# the shared ``src/utils`` modules import without an install.
 phase_dir = Path(__file__).resolve().parent / "src"
-sys.path.insert(0, str(phase_dir))
+project_root = Path(__file__).resolve().parents[2]
+for _path in (str(phase_dir), str(project_root)):
+    if _path not in sys.path:
+        sys.path.insert(0, _path)
 
 from phase01_lightgbm_baseline.comparison import (  # noqa: E402
     compute_comparison_report,
@@ -25,7 +29,7 @@ from phase01_lightgbm_baseline.comparison import (  # noqa: E402
 )
 from phase01_lightgbm_baseline.data_loader import DataLoader  # noqa: E402
 from phase01_lightgbm_baseline.pipeline import (  # noqa: E402
-    split_train_val,
+    split_and_prepare,
     train_graph_aware,
 )
 from phase01_lightgbm_baseline.lightgbm_baseline import (  # noqa: E402
@@ -34,8 +38,7 @@ from phase01_lightgbm_baseline.lightgbm_baseline import (  # noqa: E402
 from phase01_lightgbm_baseline.graph_features import (  # noqa: E402
     GraphFeatureExtractor,
 )
-
-BASELINE_FEATURES = ["TransactionAmt", "time_since_creation", "n_prior_transactions"]
+from src.utils.features import BASELINE_FEATURES  # noqa: E402
 
 
 def _print_metrics(title, metrics):
@@ -115,18 +118,21 @@ def main() -> int:
     print(f"  Test samples: {len(test_df)}")
     print(f"  Fraud rate (train): {train_df['isFraud'].mean():.4f}")
 
-    train_split, val_split = split_train_val(train_df)
+    train_feat, val_feat, test_feat, feature_params = split_and_prepare(
+        (train_df, test_df), random_state=args.random_state
+    )
+    print(f"  Baseline feature params (fit on train split): {feature_params}")
 
     print("Training minimal model (3 baseline features)...")
     minimal_model = LightGBMWrapper(random_state=args.random_state)
-    k = max(1, int(np.ceil(0.01 * len(test_df))))
+    k = max(1, int(np.ceil(0.01 * len(test_feat))))
     minimal_metrics = minimal_model.full_pipeline(
-        train_split[BASELINE_FEATURES].to_numpy(dtype=float),
-        train_split["isFraud"].to_numpy(dtype=int),
-        val_split[BASELINE_FEATURES].to_numpy(dtype=float),
-        val_split["isFraud"].to_numpy(dtype=int),
-        test_df[BASELINE_FEATURES].to_numpy(dtype=float),
-        test_df["isFraud"].to_numpy(dtype=int),
+        train_feat[BASELINE_FEATURES].to_numpy(dtype=float),
+        train_feat["isFraud"].to_numpy(dtype=int),
+        val_feat[BASELINE_FEATURES].to_numpy(dtype=float),
+        val_feat["isFraud"].to_numpy(dtype=int),
+        test_feat[BASELINE_FEATURES].to_numpy(dtype=float),
+        test_feat["isFraud"].to_numpy(dtype=int),
         k=k,
     )
     _print_metrics("Minimal model metrics", minimal_metrics)
@@ -159,8 +165,8 @@ def main() -> int:
     decision = generate_stop_decision(delta_pr_auc, p_value)
 
     payload = {
-        "minimal_metrics": minimal_metrics,
-        "graph_metrics": graph_metrics,
+        "lgb_minimal_metrics": minimal_metrics,
+        "lgb_graph_metrics": graph_metrics,
         "delta_metrics": deltas,
         "p_value": p_value,
         "delta_pr_auc": delta_pr_auc,
@@ -170,6 +176,7 @@ def main() -> int:
             "sample_limit": args.sample_limit,
             "random_state": args.random_state,
             "precision_at_k": k,
+            "feature_params": feature_params,
         },
     }
     out = _save_artifacts(args.output_dir, minimal_model, graph_model, payload, deltas)

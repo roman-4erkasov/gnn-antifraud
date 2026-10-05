@@ -75,7 +75,7 @@ phase01_lightgbm_baseline/
 │   ├── pipeline.py           # train_graph_aware + split helper
 │   └── comparison.py         # deltas, significance, stop decision
 ├── run_lightgbm_baseline.py  # end-to-end runner
-├── lessons/                  # 6 mini-lessons (Explain/Code/Visualize/Practice/Solution)
+├── lessons/                  # 8 mini-lessons (Explain/Code/Visualize/Practice/Solution)
 ├── exercises/                # practice notebooks linked from lessons
 ├── notebooks/                # 3 exploratory notebooks
 ├── tests/                    # unit tests + synthetic fixture

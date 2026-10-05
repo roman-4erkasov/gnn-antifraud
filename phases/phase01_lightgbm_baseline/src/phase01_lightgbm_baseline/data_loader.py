@@ -1,18 +1,10 @@
 """Data loading utilities for the IEEE-CIS fraud detection dataset."""
 
 import subprocess
-import sys
 from pathlib import Path
 from typing import List, Optional, Tuple
 
 import pandas as pd
-
-# Make the shared ``src.utils`` package importable when running from anywhere.
-_project_root = Path(__file__).resolve().parents[4]
-if str(_project_root) not in sys.path:
-    sys.path.insert(0, str(_project_root))
-
-from src.utils.features import prepare_baseline_features  # noqa: E402
 
 
 REQUIRED_FILES: List[str] = [
@@ -86,7 +78,11 @@ class DataLoader:
         sample_limit: Optional[int] = None,
         random_state: int = 42,
     ) -> Tuple[pd.DataFrame, pd.DataFrame]:
-        """Load train/test DataFrames with baseline features prepared.
+        """Load train/test DataFrames with raw merged columns.
+
+        The frames contain the raw transaction/identity columns only. Baseline
+        features are prepared later by the pipeline, after the train/validation
+        split, so that fitted parameters never see validation/test rows.
 
         Args:
             sample_limit: If provided, take a stratified subsample of this size.
@@ -105,9 +101,6 @@ class DataLoader:
 
         train_df = train_txn.merge(train_id, on="TransactionID", how="left")
         test_df = test_txn.merge(test_id, on="TransactionID", how="left")
-
-        train_df = prepare_baseline_features(train_df)
-        test_df = prepare_baseline_features(test_df)
 
         if sample_limit is not None:
             train_df = self._stratified_sample(train_df, sample_limit, random_state)

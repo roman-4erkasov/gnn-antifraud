@@ -14,25 +14,63 @@ _project_root = Path(__file__).resolve().parents[4]
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
 
-from src.utils.features import BASELINE_FEATURES  # noqa: E402
+from src.utils.features import (  # noqa: E402
+    BASELINE_FEATURES,
+    fit_baseline_feature_params,
+    prepare_baseline_features,
+)
 
 
 def split_train_val(
     df: pd.DataFrame,
     train_frac: float = 0.6,
     val_frac: float = 0.2,
+    random_state: int = 42,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """Split a DataFrame into train and validation portions.
+    """Randomly split a DataFrame into train and validation portions.
 
     The 60/20/20 convention is completed by the separate test split held by the
-    caller, so ``test_frac == 1 - train_frac - val_frac``.
+    caller, so ``test_frac == 1 - train_frac - val_frac``. Rows are shuffled with
+    a fixed seed before slicing (Design Decision 13: random split, not a
+    time-based split).
     """
     n = len(df)
     n_train = int(train_frac * n)
     n_val = int(val_frac * n)
-    train_split = df.iloc[:n_train].copy()
-    val_split = df.iloc[n_train : n_train + n_val].copy()
+    shuffled = df.sample(frac=1.0, random_state=random_state).reset_index(drop=True)
+    train_split = shuffled.iloc[:n_train].copy()
+    val_split = shuffled.iloc[n_train : n_train + n_val].copy()
     return train_split, val_split
+
+
+def split_and_prepare(
+    data: Tuple[pd.DataFrame, pd.DataFrame],
+    random_state: int = 42,
+) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, Dict[str, float]]:
+    """Split raw data and prepare leakage-free baseline features.
+
+    Fits the feature parameters (e.g. the ``TransactionDT`` min/max behind
+    ``time_since_creation``) on the training split only, then applies the same
+    parameters to the validation and test splits. ``n_prior_transactions`` is
+    counted within each split. Using one helper for both the minimal and the
+    graph-aware paths guarantees they share the same split and parameters.
+
+    Args:
+        data: ``(train_df, test_df)`` raw frames from ``DataLoader.load_data``.
+        random_state: Seed for the random train/validation split.
+
+    Returns:
+        Tuple ``(train_feat, val_feat, test_feat, params)`` of feature-enriched
+        DataFrames and the fitted parameters.
+    """
+    train_df, test_df = data
+    train_split, val_split = split_train_val(train_df, random_state=random_state)
+
+    params = fit_baseline_feature_params(train_split)
+    train_feat = prepare_baseline_features(train_split, params)
+    val_feat = prepare_baseline_features(val_split, params)
+    test_feat = prepare_baseline_features(test_df, params)
+    return train_feat, val_feat, test_feat, params
 
 
 def train_graph_aware(
@@ -54,8 +92,7 @@ def train_graph_aware(
         Tuple ``(model, metrics_dict)``. ``model.raw_test_probs_`` holds the raw
         test-set probabilities for downstream significance testing.
     """
-    train_df, test_df = data
-    train_split, val_split = split_train_val(train_df)
+    train_split, val_split, test_split, _ = split_and_prepare(data)
 
     graph = graph_extractor.build_bipartite_graph(train_split)
     feature_table = graph_extractor.compute_feature_table(graph)
@@ -64,7 +101,7 @@ def train_graph_aware(
         train_split, val_split, feature_table
     )
     _, test_g = graph_extractor.append_graph_features(
-        train_split, test_df, feature_table
+        train_split, test_split, feature_table
     )
 
     feature_cols = BASELINE_FEATURES + graph_extractor.graph_feature_columns(

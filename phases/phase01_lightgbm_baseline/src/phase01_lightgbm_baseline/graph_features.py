@@ -88,19 +88,26 @@ class GraphFeatureExtractor:
         graph: nx.Graph,
         node_type: str = "user",
     ) -> Dict:
-        """Run Louvain community detection and return ``node -> label``."""
+        """Run Louvain community detection on the user projection.
+
+        Community structure is computed among user nodes only. The bipartite
+        user-merchant graph is projected onto users (two users are linked when
+        they share a merchant), and Louvain runs on that user-user graph rather
+        than on the full bipartite graph. Returns ``user_node -> int label``.
+        """
         import community as community_louvain
 
-        partition = community_louvain.best_partition(graph)
+        user_nodes = [
+            node
+            for node, data in graph.nodes(data=True)
+            if not node_type or data.get("node_type") == node_type
+        ]
+        if not user_nodes:
+            return {}
 
-        if node_type:
-            partition = {
-                node: label
-                for node, label in partition.items()
-                if graph.nodes[node].get("node_type") == node_type
-            }
-
-        return partition
+        user_graph = nx.bipartite.projected_graph(graph, user_nodes)
+        partition = community_louvain.best_partition(user_graph)
+        return {node: int(label) for node, label in partition.items()}
 
     def compute_rwse_features(
         self,

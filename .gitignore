@@ -220,3 +220,11 @@ __marimo__/
 # Data (downloaded datasets; keep the folder structure only)
 data/*
 !data/.gitkeep
+
+# Generated run artifacts (metrics, models, calibrators, plots)
+phases/*/results/*
+!phases/*/results/.gitkeep
+
+# Generated lesson/notebook output images
+phases/*/lesson*.png
+phases/*/notebooks/*.png

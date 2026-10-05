@@ -18,6 +18,11 @@ The system SHALL implement a LightGBM baseline classifier trained on a feature m
 - **WHEN** baseline model is trained
 - **THEN** the system evaluates and reports PR-AUC, ROC-AUC, Brier score, and Precision@K on a held-out test set
 
+#### Scenario: Leakage-free feature preprocessing
+
+- **WHEN** baseline features are prepared for train/validation/test
+- **THEN** fitted parameters (e.g. the `TransactionDT` min/max used to build `time_since_creation`) are computed from the training split only and applied to validation/test, and `n_prior_transactions` is counted within each split so no cross-split information leaks
+
 ### Requirement: Isotonic calibration for LightGBM
 
 The system SHALL apply isotonic regression calibration to the probability outputs of the LightGBM baseline, ensuring well-calibrated scores.
@@ -40,6 +45,11 @@ The system SHALL extract graph-derived features from the transaction graph inclu
 
 - **WHEN** IEEE-CIS transaction data is loaded
 - **THEN** the system builds a bipartite graph with users and merchants as nodes and transactions as edges, computing node degree for each node
+
+#### Scenario: Community detection scope
+
+- **WHEN** community membership labels are computed
+- **THEN** Louvain community detection runs only on the user projection (two users are connected when they share a merchant), not the full bipartite graph, and the resulting labels are mapped back to user nodes
 
 #### Scenario: RWSE feature computation
 

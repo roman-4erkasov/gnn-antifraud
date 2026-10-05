@@ -4,7 +4,7 @@ The project has a running skeleton with shared utilities already implemented:
 - `src/utils/calibration.py` — `IsotonicCalibrator` with `fit`/`predict`/`fit_predict` and conformal prediction intervals.
 - `src/utils/metrics.py` — `compute_metrics` (PR-AUC, ROC-AUC, Brier, log-loss, Precision@K), `compute_delta_metrics`, and `paired_permutation_test`.
 
-This change adds a third shared utility, `src/utils/features.py`, providing `prepare_baseline_features()` for the 3-feature baseline table.
+This change adds a third shared utility, `src/utils/features.py`, providing a fit/transform API (`fit_baseline_feature_params()` and `prepare_baseline_features()`) for the 3-feature baseline table.
 
 Phase 01 is a self-contained phase under `phases/phase01_lightgbm_baseline/`. No existing scoring modules need to be modified. The phase package is installed and imported as `phase01_lightgbm_baseline` (hatch `packages = ["src/phase01_lightgbm_baseline"]`), consistent with phases 02+.
 
@@ -38,7 +38,7 @@ Phase 01 is a self-contained phase under `phases/phase01_lightgbm_baseline/`. No
 
 ### Decision 2: Graph construction uses NetworkX, not PyTorch Geometric
 **Choice:** Use `networkx` for graph construction, degree computation, community detection (Louvain via `community_louvain`), and RWSE feature computation.
-**Rationale:** Phase 1 is about establishing a tabular baseline with graph-derived features, not about training GNNs. NetworkX is lighter, easier to debug, and sufficient for computing node features (degree — equivalently incident edge count — clustering coefficient, Louvain community labels, and RWSE, defined as the diagonal of k-step random-walk return probabilities for k = 1..8). PyG will be introduced in later GNN phases.
+**Rationale:** Phase 1 is about establishing a tabular baseline with graph-derived features, not about training GNNs. NetworkX is lighter, easier to debug, and sufficient for computing node features (degree — equivalently incident edge count — clustering coefficient, Louvain community labels, and RWSE, defined as the diagonal of k-step random-walk return probabilities for k = 1..8). Louvain is run on the user projection (two users are connected when they share a merchant) rather than the full bipartite graph, since the fraud-pattern communities of interest are among users (e.g. shared cards/devices); labels are mapped back to the user nodes afterwards. PyG will be introduced in later GNN phases.
 **Alternatives considered:**
 - PyG `Data` objects — overkill for feature extraction without GNN training.
 - `igraph` — comparable, but NetworkX has broader ecosystem integration.
@@ -122,12 +122,20 @@ Phase 01 is a self-contained phase under `phases/phase01_lightgbm_baseline/`. No
 - Fold the material into existing lessons — keeps the file count fixed but buries foundational concepts and overloads lessons 02/06.
 - Add more notebooks instead of lessons — no guided Explain/Visualize flow.
 
+### Decision 14: Leakage-free baseline feature preparation
+**Choice:** `src/utils/features.py` exposes a fit/transform API: `fit_baseline_feature_params(train_df)` computes the parameters needed by `prepare_baseline_features` (currently the `TransactionDT` min and max used to build `time_since_creation`), and `prepare_baseline_features(df, params)` applies them. `DataLoader.load_data()` returns merged raw frames without baseline features; the split happens first, parameters are fit on the training split only, and the same parameters are applied to validation and test. `n_prior_transactions` is counted within each split (per-split `groupby(card1).cumcount()`), so neither the time normalization nor the prior-count feature sees other splits.
+**Rationale:** Fitting the `TransactionDT` min-max on the full dataset before splitting leaks validation/test information into a training feature, which biases the held-out comparison that the Phase 1 stop decision depends on. Fitting on the training split and counting prior transactions within each split removes this leakage while keeping the feature definitions unchanged. This makes lesson 07's no-leakage claim true of the code, not only of graph construction.
+**Alternatives considered:**
+- Keep `prepare_baseline_features(df)` normalizing over the whole frame — simple, but leaks across the split.
+- Min-max normalize using fixed dataset-wide constants — avoids fitting but still uses non-training data.
+- Drop `time_since_creation` normalization entirely — changes the feature definition and hurts comparability.
+
 ## Risks / Trade-offs
 
 | Risk | Mitigation |
 |------|-----------|
 | IEEE-CIS dataset not available or too large to load | Support `sample_limit` parameter in loader for prototyping; use stratified subsampling for fraud minority class. |
-| Graph features computation slow on full dataset | Pre-compute and cache graph features to disk (parquet); use community detection only on the user subgraph, not the full bipartite graph. |
+| Graph features computation slow on full dataset | Pre-compute and cache graph features to disk (parquet); use community detection only on the user projection, not the full bipartite graph. |
 | Calibration overfits on small validation set | Require a minimum validation-set size and enough positive examples; fall back to identity (raw probabilities) or blend the isotonic output with raw scores when the validation set is too small. (`IsotonicCalibrator` intentionally has no smoothing parameter.) |
 | Memory issues with dense graph representation | Use sparse adjacency matrices via `scipy.sparse` if memory becomes a constraint; use iterative Louvain for large graphs. |
 
